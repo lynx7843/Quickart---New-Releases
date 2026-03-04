@@ -100,6 +100,6 @@ Below is a sample preview layout of QuickArt:
 - 🛍️ **Product Page** – 3D view + AR room preview
 - 📊 **Seller Dashboard** – Product & sales management
 
-![QuickArt Preview](https://placehold.co/1200x500?text=QuickArt+AI+%2B+AR+E-Commerce+Preview)
+![QuickArt Preview](preview\preview.png)
 
 > 💡 Replace the image above with an actual screenshot from your project for best results.
