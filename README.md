@@ -1,206 +1,204 @@
-# \# 🛍️ QuickArt – AI \& AR Powered E-Commerce Platform
+\# 🛍️ QuickArt – AI \& AR Powered E-Commerce Platform
 
-# 
 
-# ---
 
-# 
+---
 
-# \## 📌 1. Introduction
 
-# 
 
-# \*\*QuickArt\*\* is a modern e-commerce platform designed to improve the online shopping experience using \*\*Artificial Intelligence (AI)\*\* and \*\*Augmented Reality (AR)\*\*.
+\## 📌 1. Introduction
 
-# 
 
-# It helps both \*\*buyers\*\* and \*\*sellers\*\* interact smarter, faster, and more visually.
 
-# 
+\*\*QuickArt\*\* is a modern e-commerce platform designed to improve the online shopping experience using \*\*Artificial Intelligence (AI)\*\* and \*\*Augmented Reality (AR)\*\*.
 
-# ---
 
-# 
 
-# \## 🎯 2. Project Vision
+It helps both \*\*buyers\*\* and \*\*sellers\*\* interact smarter, faster, and more visually.
 
-# 
 
-# QuickArt aims to:
 
-# 
+---
 
-# \- Make online shopping more interactive  
 
-# \- Help customers make better buying decisions  
 
-# \- Support sellers with smart tools  
+\## 🎯 2. Project Vision
 
-# \- Reduce product return rates using AR visualization  
 
-# 
 
-# ---
+QuickArt aims to:
 
-# 
 
-# \## 🤖 3. AI Features
 
-# 
+\- Make online shopping more interactive
 
-# QuickArt includes intelligent AI-powered tools:
+\- Help customers make better buying decisions
 
-# 
+\- Support sellers with smart tools
 
-# \### 💬 AI Chatbot
+\- Reduce product return rates using AR visualization
 
-# \- 24/7 customer support  
 
-# \- Instant answers to product questions  
 
-# \- Order tracking assistance  
+---
 
-# 
 
-# \### 🎙️ Voice Assistant
 
-# \- Search products using voice  
+\## 🤖 3. AI Features
 
-# \- Navigate the platform hands-free  
 
-# \- Quick command support  
 
-# 
+QuickArt includes intelligent AI-powered tools:
 
-# ---
 
-# 
 
-# \## 🧩 4. AR Features
+\### 💬 AI Chatbot
 
-# 
+\- 24/7 customer support
 
-# QuickArt brings products to life using Augmented Reality.
+\- Instant answers to product questions
 
-# 
+\- Order tracking assistance
 
-# \### 🏠 Virtual Room View
 
-# \- Place furniture and decor inside your room  
 
-# \- See how products fit before buying  
+\### 🎙️ Voice Assistant
 
-# 
+\- Search products using voice
 
-# \### 📦 3D Product Viewer
+\- Navigate the platform hands-free
 
-# \- Rotate and zoom products in 3D  
+\- Quick command support
 
-# \- View items from every angle  
 
-# 
 
-# ---
+---
 
-# 
 
-# \## 👥 5. User Roles
 
-# 
+\## 🧩 4. AR Features
 
-# \### 🛒 Buyers
 
-# \- Browse products  
 
-# \- Use AI \& AR tools  
+QuickArt brings products to life using Augmented Reality.
 
-# \- Secure checkout  
 
-# \- Track orders  
 
-# 
+\### 🏠 Virtual Room View
 
-# \### 🏪 Sellers
+\- Place furniture and decor inside your room
 
-# \- Add and manage products  
+\- See how products fit before buying
 
-# \- Upload 3D product models  
 
-# \- Chat with customers  
 
-# \- Track sales performance  
+\### 📦 3D Product Viewer
 
-# 
+\- Rotate and zoom products in 3D
 
-# ---
+\- View items from every angle
 
-# 
 
-# \## 🌟 6. Unique Advantages
 
-# 
+---
 
-# \- AI + AR integrated platform  
 
-# \- Smart shopping experience  
 
-# \- Interactive 3D product display  
+\## 👥 5. User Roles
 
-# \- Voice-enabled browsing  
 
-# \- Easy-to-use interface  
 
-# 
+\### 🛒 Buyers
 
-# ---
+\- Browse products
 
-# 
+\- Use AI \& AR tools
 
-# \## 🚀 7. Future Enhancements
+\- Secure checkout
 
-# 
+\- Track orders
 
-# \- Personalized AI recommendations  
 
-# \- Advanced seller analytics dashboard  
 
-# \- Mobile application integration  
+\### 🏪 Sellers
 
-# \- Multi-language support  
+\- Add and manage products
 
-# 
+\- Upload 3D product models
 
-# ---
+\- Chat with customers
 
-# 
+\- Track sales performance
 
-# \## 📷 8. System Preview
 
-# 
 
-# Below is a sample preview layout of QuickArt:
+---
 
-# 
 
-# \- 🏠 Home Page – Featured products \& AI assistant  
 
-# \- 🔍 Smart Search – Voice \& chatbot enabled  
+\## 🌟 6. Unique Advantages
 
-# \- 🛍️ Product Page – 3D view + AR room preview  
 
-# \- 📊 Seller Dashboard – Product \& sales management  
 
-# 
+\- AI + AR integrated platform
 
-# ---
+\- Smart shopping experience
 
-# 
+\- Interactive 3D product display
 
-# \## 🏷️ Preview
+\- Voice-enabled browsing
 
-# 
+\- Easy-to-use interface
 
-# !\[QuickArt Preview](https://via.placeholder.com/1200x500.png?text=QuickArt+AI+%2B+AR+E-Commerce+Preview)
 
 
+---
+
+
+
+\## 🚀 7. Future Enhancements
+
+
+
+\- Personalized AI recommendations
+
+\- Advanced seller analytics dashboard
+
+\- Mobile application integration
+
+\- Multi-language support
+
+
+
+---
+
+
+
+\## 📷 8. System Preview
+
+
+
+Below is a sample preview layout of QuickArt:
+
+
+
+\- 🏠 Home Page – Featured products \& AI assistant
+
+\- 🔍 Smart Search – Voice \& chatbot enabled
+
+\- 🛍️ Product Page – 3D view + AR room preview
+
+\- 📊 Seller Dashboard – Product \& sales management
+
+
+
+---
+
+
+
+\## 🏷️ Preview
+
+
+
+!\[QuickArt Preview](https://via.placeholder.com/1200x500.png?text=QuickArt+AI+%2B+AR+E-Commerce+Preview)
 
