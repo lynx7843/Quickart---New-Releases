@@ -100,6 +100,6 @@ Below is a sample preview layout of QuickArt:
 - 🛍️ **Product Page** – 3D view + AR room preview
 - 📊 **Seller Dashboard** – Product & sales management
 
-![QuickArt Preview](preview\preview.png)
+![QuickArt Preview](preview/preview.png)
 
-> 💡 Replace the image above with an actual screenshot from your project for best results.
+> 💡 Make sure the `preview.png` file is located inside a folder named `preview` in the same directory as this Markdown file for the image to display correctly.
