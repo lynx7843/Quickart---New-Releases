@@ -101,5 +101,3 @@ Below is a sample preview layout of QuickArt:
 - 📊 **Seller Dashboard** – Product & sales management
 
 ![QuickArt Preview](preview/preview.png)
-
-> 💡 Make sure the `preview.png` file is located inside a folder named `preview` in the same directory as this Markdown file for the image to display correctly.
