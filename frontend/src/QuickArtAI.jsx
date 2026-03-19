@@ -497,13 +497,13 @@ export default function QuickArtAI() {
         const response = await fetch("http://localhost:8080/api/ai/chat", {
           method: "POST",
           headers: {
-            "Content-Type": "text/plain", // Because your Spring Controller expects a simple String
+            "Content-Type": "text/plain", // Set to "application/json" if your backend expects JSON
           },
           body: userMessage,
         });
 
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         // 3. Get the AI's response and add it to the chat
@@ -520,7 +520,10 @@ export default function QuickArtAI() {
     };
 
   const handleKeyDown = (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") handleSend();
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
@@ -631,7 +634,7 @@ export default function QuickArtAI() {
                     </button>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span className="qa-hint">⌘ Enter to send</span>
+                    <span className="qa-hint">Enter to send</span>
                     <button
                       className="qa-send"
                       onClick={handleSend}
