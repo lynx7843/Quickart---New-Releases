@@ -1,21 +1,21 @@
 package com.example.backend.controller;
 
-import com.example.backend.service.OpenAiService;
+import com.example.backend.service.GeminiService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/ai")
-@CrossOrigin(origins = "http://localhost:5173") // <-- This relates to Step 4
-public class OpenAiController {
+@CrossOrigin(origins = "http://localhost:5173") // Keeps the connection to your React app open
+public class GeminiController {
 
-    private final OpenAiService openAiService;
+    private final GeminiService geminiService;
 
-    public OpenAiController(OpenAiService openAiService) {
-        this.openAiService = openAiService;
+    public GeminiController(GeminiService geminiService) {
+        this.geminiService = geminiService;
     }
 
     @PostMapping("/chat")
     public String chat(@RequestBody String prompt) {
-        return openAiService.getOpenAiResponse(prompt);
+        return geminiService.getGeminiResponse(prompt);
     }
 }
