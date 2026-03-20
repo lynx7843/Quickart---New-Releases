@@ -491,9 +491,6 @@ export default function QuickArtAI() {
 
   useEffect(() => { scrollToBottom(); }, [messages, loading]);
 
-  const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleChip = (label) => {
     setPrompt(label);
     setFocused(true);
@@ -505,7 +502,6 @@ export default function QuickArtAI() {
   };
 
   const handleSend = async () => {
-<<<<<<< HEAD:src/QuickArtAI.jsx
     if (!prompt.trim()) return;
     
     const userMsg = { role: "user", content: prompt };
@@ -538,43 +534,6 @@ export default function QuickArtAI() {
     }
     setLoading(false);
   };
-=======
-      if (!prompt.trim()) return;
-      
-      // 1. Save user's message and clear the input box
-      const userMessage = prompt;
-      setPrompt(""); 
-      setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
-      setSent(true);
-      setIsLoading(true);
-
-      try {
-        // 2. Send the message to your Spring Boot backend
-        const response = await fetch("http://localhost:8080/api/ai/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain", // Set to "application/json" if your backend expects JSON
-          },
-          body: userMessage,
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // 3. Get the AI's response and add it to the chat
-        const aiResponseText = await response.text(); 
-        setMessages((prev) => [...prev, { sender: "ai", text: aiResponseText }]);
-
-      } catch (error) {
-        console.error("Error communicating with backend:", error);
-        setMessages((prev) => [...prev, { sender: "ai", text: "Oops! Couldn't connect to the server." }]);
-      } finally {
-        setIsLoading(false);
-        setTimeout(() => setSent(false), 600);
-      }
-    };
->>>>>>> 75481b1e34baeaafbb7777374fc6838d96e94088:frontend/src/QuickArtAI.jsx
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -623,40 +582,12 @@ export default function QuickArtAI() {
                 QuickArt AI — Powered by Advanced Vision + Language Models
               </div>
 
-              {/* Chat Interface OR Hero Text */}
-              {messages.length > 0 ? (
-                <div style={{ textAlign: "left", marginBottom: "30px", maxHeight: "400px", overflowY: "auto", padding: "10px" }}>
-                  {messages.map((msg, idx) => (
-                    <div key={idx} style={{ 
-                      marginBottom: "15px", 
-                      padding: "15px", 
-                      borderRadius: "12px",
-                      background: msg.sender === "user" ? "#ffffff" : "#FF5C1A",
-                      color: msg.sender === "user" ? "#1a1a1a" : "#ffffff",
-                      border: msg.sender === "user" ? "1px solid #F0F0F0" : "none",
-                      alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
-                      boxShadow: "0 2px 10px rgba(0,0,0,0.05)"
-                    }}>
-                      <strong>{msg.sender === "user" ? "You" : "QuickArt AI"}</strong>
-                      <div style={{ marginTop: "5px", lineHeight: "1.5" }}>{msg.text}</div>
-                    </div>
-                  ))}
-                  {isLoading && (
-                    <div style={{ padding: "15px", color: "#888", fontStyle: "italic" }}>
-                      QuickArt AI is thinking...
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  {/* Original Heading for empty state */}
-                  <h1 className="qa-h1">
-                    All tasks in one ask,{" "}
-                    <span className="qa-h1-accent">smart sourcing with AI</span>
-                  </h1>
-                  <p className="qa-sub">Design, discover & build your store experience — in seconds.</p>
-                </>
-              )}
+              {/* Original Heading for empty state */}
+              <h1 className="qa-h1">
+                All tasks in one ask,{" "}
+                <span className="qa-h1-accent">smart sourcing with AI</span>
+              </h1>
+              <p className="qa-sub">Design, discover & build your store experience — in seconds.</p>
 
               {/* Search Box */}
               <div className={`qa-search-wrap${focused ? " focused" : ""}`}>
@@ -729,7 +660,7 @@ export default function QuickArtAI() {
               {featureCards.map((card) => (
                 <div key={card.title} className="qa-card" onClick={() => {
                   if (card.title === "AR Fit-in-Room") {
-                    navigate("/virtual-fitting-room");
+                    navigate("/ar-viewer");
                   }
                 }}>
                   <div className="qa-card-icon">{card.icon}</div>

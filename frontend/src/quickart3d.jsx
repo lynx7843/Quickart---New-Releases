@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { ShoppingBag, CreditCard, Star, ShieldCheck, Truck, RotateCcw, Plus, Minus, ZoomIn } from 'lucide-react';
+import { Canvas } from '@react-three/fiber';
+import { ARButton, XR } from '@react-three/xr';
+import { useGLTF, Environment, OrbitControls } from '@react-three/drei';
 
 const IMAGES = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&q=80",
@@ -8,17 +11,15 @@ const IMAGES = [
   "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=700&q=80",
 ];
 
+const ProductModel = ({ modelPath }) => {
+  const { scene } = useGLTF(modelPath);
+  return <primitive object={scene} position={[0, -0.5, -1]} scale={1} />;
+};
+
+useGLTF.preload('/3d-models/item.glb');
+
 function ProductImageViewer() {
   const [active, setActive] = useState(0);
-  const [zoomed, setZoomed] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMousePos({ x, y });
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 12, padding: '1.5rem' }}>
@@ -26,24 +27,21 @@ function ProductImageViewer() {
       <div
         style={{
           flex: 1, borderRadius: '1.25rem', overflow: 'hidden', position: 'relative',
-          cursor: zoomed ? 'zoom-out' : 'zoom-in', background: '#e8edf2', minHeight: 260,
+          cursor: 'grab', background: '#e8edf2', minHeight: 260,
         }}
-        onMouseMove={handleMouseMove}
-        onClick={() => setZoomed(z => !z)}
-        onMouseLeave={() => setZoomed(false)}
       >
-        <img
-          src={IMAGES[active]}
-          alt="Product"
-          style={{
-            width: '100%', height: '100%', objectFit: 'cover',
-            transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
-            transform: zoomed ? 'scale(2)' : 'scale(1)',
-            transition: zoomed ? 'transform 0.1s ease' : 'transform 0.4s ease',
-            display: 'block',
-          }}
-        />
-        {!zoomed && (
+        <ARButton sessionInit={{ requiredFeatures: ['hit-test'] }} />
+        <Canvas>
+          <XR>
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.6} />
+              <directionalLight position={[10, 10, 10]} intensity={1.5} />
+              <Environment preset="city" />
+              <ProductModel modelPath="/3d-models/item.glb" />
+              <OrbitControls enableZoom={true} />
+            </Suspense>
+          </XR>
+        </Canvas>
           <div style={{
             position: 'absolute', bottom: 14, right: 14,
             background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(6px)',
@@ -51,11 +49,11 @@ function ProductImageViewer() {
             display: 'flex', alignItems: 'center', gap: 5,
             fontSize: 11, fontWeight: 700, color: '#024f59',
             letterSpacing: '0.05em', textTransform: 'uppercase',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          pointerEvents: 'none'
           }}>
-            <ZoomIn size={13} /> Click to zoom
+          <ZoomIn size={13} /> Scroll to zoom
           </div>
-        )}
       </div>
 
       {/* Thumbnails */}
@@ -63,7 +61,7 @@ function ProductImageViewer() {
         {IMAGES.map((src, i) => (
           <button
             key={i}
-            onClick={() => { setActive(i); setZoomed(false); }}
+            onClick={() => setActive(i)}
             style={{
               width: 56, height: 56, borderRadius: 10, overflow: 'hidden',
               border: active === i ? '2.5px solid #024f59' : '2px solid transparent',
@@ -130,7 +128,7 @@ const ProductPage = () => {
         <div style={{ background: 'linear-gradient(145deg, #f4f6fa, #e8edf4)', display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: 420 }}>
           <ProductImageViewer />
           <p style={{ textAlign: 'center', paddingBottom: '1.25rem', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#557a8c', fontWeight: 700, margin: 0 }}>
-            Click image to zoom · 4 views
+            Scroll to zoom · AR enabled
           </p>
         </div>
 
