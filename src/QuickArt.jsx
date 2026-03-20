@@ -2,33 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "./pages/CartContext";
 import { ShoppingCart, Search, Globe, ChevronDown, Star, Heart, Zap, Shield, Truck, RefreshCw, ChevronLeft, ChevronRight, Plus, Trash2, Edit, BarChart2, Package, Users, CreditCard, Settings, LogOut, Bell, Tag, Home, Grid, Camera, Watch, Headphones, Shirt, Dumbbell, BookOpen, Gem, Car, Monitor, Cpu, Tv, Download, ArrowRight, TrendingUp, Award, Filter, MoreVertical, X, ShieldCheck, RotateCcw, Trophy } from "lucide-react";
+import { categoriesData } from "./assets/all.jsx";
 
 const HERO_SLIDES = [
-  { 
-    title: "Next-Gen",
-    highlight: "AR Shopping",
-    sub: "Try before you buy with Virtual Try-On",
-    bg: "linear-gradient(135deg,#0f0c29,#302b63,#24243e)",
-    accent: "#FF6B00",
-    img: "https://images.unsplash.com/photo-1633114128174-2f8aa49759b0?q=80&w=1000&auto=format&fit=crop",
-    path: "/virtual-fitting-room"
-  },
-  { 
-    title: "Exclusive",
-    highlight: "Flash Deals",
-    sub: "Up to 70% off on premium electronics & fashion",
-    bg: "linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)",
-    accent: "#FFD700",
-    img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1000&auto=format&fit=crop",
-    path: "/all-categories"
-  },
   { 
     title: "Virtual",
     highlight: "Fitone Room",
     sub: "AI-powered virtual fitting room experience",
     bg: "linear-gradient(135deg,#200122,#6f0000,#200122)",
-    accent: "#FF69B4",
-    img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1000&auto=format&fit=crop",
+    accent: "#557a8c",
+    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
     path: "/virtual-fitting-room"
   },
   { 
@@ -36,8 +19,8 @@ const HERO_SLIDES = [
     highlight: "Viewer",
     sub: "Explore every angle with immersive 3D technology",
     bg: "linear-gradient(135deg,#0d2137,#1a4a6e,#0d2137)",
-    accent: "#00D4FF",
-    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
+    accent: "#557a8c",
+    img: "https://images.unsplash.com/photo-1616469829941-c7200edec809?q=80&w=1000&auto=format&fit=crop",
     path: "/quickart3d"
   },
   { 
@@ -45,8 +28,8 @@ const HERO_SLIDES = [
     highlight: "AI Assistant",
     sub: "Personalized shopping powered by AI",
     bg: "linear-gradient(135deg,#0f2027,#203a43,#2c5364)",
-    accent: "#7CFC00",
-    img: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1000&auto=format&fit=crop",
+    accent: "#557a8c",
+    img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop",
     path: "/quick-art-ai"
   },
 ];
@@ -66,7 +49,7 @@ function StarRating({ rating }) {
   return (
     <div style={{ display:"flex", gap:2 }}>
       {[1,2,3,4,5].map(i => (
-        <Star key={i} size={12} fill={i<=Math.floor(rating)?"#FF6B00":"none"} color={i<=rating?"#FF6B00":"#ddd"} />
+        <Star key={i} size={12} fill={i<=Math.floor(rating)?"#557a8c":"none"} color={i<=rating?"#557a8c":"#ddd"} />
       ))}
     </div>
   );
@@ -96,7 +79,7 @@ function ProductCard({ product: p, onAdd, onWish, wished }) {
         </div>
       </div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop: 8 }}>
-        <div style={{ fontSize:16, fontWeight:800, color:"#FF6B00" }}>LKR {p.price.toLocaleString()}</div>
+        <div style={{ fontSize:16, fontWeight:800, color:"#111111" }}>LKR {p.price.toLocaleString()}</div>
         <div style={{ display:"flex", gap:6 }}>
           <button onClick={(e)=>{e.stopPropagation(); onWish(p.id)}} style={{ width:28, height:28, borderRadius:"50%", border:"1px solid #eee", background:"#fff", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <Heart size={14} color={wished?"#ef4444":"#888"} fill={wished?"#ef4444":"none"}/>
@@ -121,6 +104,39 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
   const [cd, setCd] = useState({ h:5, m:32, s:17 });
   const [notif, setNotif] = useState(null);
   const [email, setEmail] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const results = [];
+
+    categoriesData.forEach(cat => {
+      if (cat.name.toLowerCase().includes(lowerQuery)) {
+        results.push({ ...cat, type: 'Category' });
+      }
+      cat.subCategories.forEach(sub => {
+        if (sub.name.toLowerCase().includes(lowerQuery)) {
+          results.push({ ...sub, type: 'SubCategory', parentName: cat.name });
+        }
+      });
+    });
+    setSearchResults(results.slice(0, 10));
+  };
+
+  // Fetch data from the backend when the component mounts
+  useEffect(() => {
+    // Using static data to ensure products with images are displayed
+    // fetchInitialData();
+  }, []);
 
   useEffect(() => {
     const t = setInterval(()=>setSlide(s=>(s+1)%HERO_SLIDES.length), 5000);
@@ -151,15 +167,15 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
   const visProds = products.slice(pSlide, pSlide+3);
 
   return (
-    <div style={{ fontFamily:"'Sora','Segoe UI',sans-serif", minHeight:"100vh", background:"#F4F6FA", overflowX:"hidden" }}>
+    <div style={{ fontFamily:"'Sora','Segoe UI',sans-serif", minHeight:"100vh", background:"#F4F6FA", overflowX:"hidden", position: "relative" }}>
       <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
       <style>{`
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
         @keyframes fadeIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
         * { box-sizing:border-box; }
         ::-webkit-scrollbar { width:5px; }
-        ::-webkit-scrollbar-track { background:#f1f1f1; }
-        ::-webkit-scrollbar-thumb { background:#FF6B00; border-radius:3px; }
+        ::-webkit-scrollbar-track { background:#f4f6fa; }
+        ::-webkit-scrollbar-thumb { background:#557a8c; border-radius:3px; }
       `}</style>
 
       {/* Notification */}
@@ -169,7 +185,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         </div>
       )}
 
-      <button onClick={()=>navigate('/admin')} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1001, background:"linear-gradient(135deg,#4F8EF7,#A855F7)", color:"#fff", border:"none", borderRadius:14, padding:"10px 16px", cursor:"pointer", fontSize:13, fontWeight:700, display:"flex", alignItems:"center", gap:6, boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+      <button onClick={()=>navigate('/admin')} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1001, background:"#557a8c", color:"#fff", border:"none", borderRadius:14, padding:"10px 16px", cursor:"pointer", fontSize:13, fontWeight:700, display:"flex", alignItems:"center", gap:6, boxShadow: '0 8px 24px rgba(85, 122, 140, 0.25)' }}>
         <Settings size={14}/> Admin Panel
       </button>
 
@@ -183,17 +199,17 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
           <div style={{ maxHeight:300, overflowY:"auto", padding:"8px 18px" }}>
             {cart.length===0?(
               <div style={{ textAlign:"center", padding:"32px 0", color:"#ccc" }}>
-                <div style={{ fontSize:40, marginBottom:8 }}>🛒</div>
-                <div style={{ fontSize:13, color:"#888" }}>Your cart is empty</div>
+                <div style={{ fontSize:40, marginBottom:8 }}>⚪</div>
+                <div style={{ fontSize:13, color:"#557a8c" }}>Your cart is empty</div>
               </div>
             ):cart.map(item=>(
               <div key={item.id} style={{ display:"flex", alignItems:"center", gap:10, padding:"11px 0", borderBottom:"1px solid #F5F5F5" }}>
                 <div style={{ fontSize:26, background:"#F8F9FC", borderRadius:10, width:42, height:42, display:"flex", alignItems:"center", justifyContent:"center" }}>{item.emoji}</div>
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:12, fontWeight:600 }}>{item.name}</div>
-                  <div style={{ fontSize:11, color:"#888" }}>×{item.qty}</div>
+                  <div style={{ fontSize:11, color:"#557a8c" }}>×{item.qty}</div>
                 </div>
-                <div style={{ fontSize:13, fontWeight:700, color:"#FF6B00" }}>LKR {(item.price*item.qty).toLocaleString()}</div>
+                <div style={{ fontSize:13, fontWeight:700, color:"#111111" }}>LKR {(item.price*item.qty).toLocaleString()}</div>
                 <button onClick={() => removeItem(item.id)} style={{ background:"none", border:"none", cursor:"pointer", color:"#aaa", marginLeft:8 }}><Trash2 size={14}/></button>
               </div>
             ))}
@@ -202,9 +218,9 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
             <div style={{ padding:18, borderTop:"1px solid #F0F0F0" }}>
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:12 }}>
                 <span style={{ fontWeight:700 }}>Total</span>
-                <span style={{ fontWeight:800, color:"#FF6B00", fontSize:16 }}>LKR {cartTotal.toLocaleString()}</span>
+                <span style={{ fontWeight:800, color:"#111111", fontSize:16 }}>LKR {cartTotal.toLocaleString()}</span>
               </div>
-              <button onClick={() => { navigate('/cart'); closeCart(); }} style={{ width:"100%", background:"linear-gradient(135deg,#FF6B00,#FF8C42)", color:"#fff", border:"none", borderRadius:12, padding:"12px", cursor:"pointer", fontWeight:700, fontSize:14 }}>
+              <button onClick={() => { navigate('/cart'); closeCart(); }} style={{ width:"100%", background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"12px", cursor:"pointer", fontWeight:700, fontSize:14 }}>
                 Checkout →
               </button>
             </div>
@@ -213,7 +229,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
       )}
 
       {/* Hero Banner */}
-      <section style={{ position: "relative", minHeight: "600px", background: "#0b1121", color: "#fff", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <section style={{ position: "relative", minHeight: "600px", background: "#111111", color: "#fff", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "center" }}>
         {/* Background Gradients */}
         <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 70% 50%, ${hs.accent}26, transparent 50%)` }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(30,58,138,0.2), transparent 50%)" }} />
@@ -299,14 +315,14 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
       </section>
 
       {/* Bottom Features Banner */}
-      <div style={{ background: "#131b2f", borderTop: "1px solid rgba(255,255,255,0.05)", padding: "24px 0" }}>
+      <div style={{ background: "#1a1a1a", borderTop: "1px solid rgba(255,255,255,0.05)", padding: "24px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24 }}>
           {[
-            { icon: Truck, color: "#f97316", title: "Free Delivery", sub: "Over LKR 5,000" },
-            { icon: ShieldCheck, color: "#3b82f6", title: "Secure Payment", sub: "100% Protected" },
-            { icon: RotateCcw, color: "#6366f1", title: "Easy Returns", sub: "30 Day Policy" },
-            { icon: Headphones, color: "#eab308", title: "24/7 Support", sub: "Always Here" },
-            { icon: Trophy, color: "#f43f5e", title: "Top Quality", sub: "Verified Products" },
+            { icon: Truck, color: "#f4f6fa", title: "Free Delivery", sub: "Over LKR 5,000" },
+            { icon: ShieldCheck, color: "#f4f6fa", title: "Secure Payment", sub: "100% Protected" },
+            { icon: RotateCcw, color: "#f4f6fa", title: "Easy Returns", sub: "30 Day Policy" },
+            { icon: Headphones, color: "#f4f6fa", title: "24/7 Support", sub: "Always Here" },
+            { icon: Trophy, color: "#f4f6fa", title: "Top Quality", sub: "Verified Products" },
           ].map((f, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, justifyContent: "center" }}>
               <div style={{ width: 48, height: 48, borderRadius: "50%", background: `${f.color}1a`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -332,25 +348,49 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
                 if (id === 'ai') navigate('/quick-art-ai');
                 else if (id === 'vr') navigate('/virtual-fitting-room');
                 else setTab(id);
-              }} style={{ padding:"9px 16px", border:"none", borderBottom: tab===id?"3px solid #FF6B00":"3px solid transparent", background:"none", cursor:"pointer", fontWeight:700, fontSize:12, color: tab===id?"#FF6B00":"#888", marginBottom:-2, transition:"all 0.2s" }}>{l}</button>
+              }} style={{ padding:"9px 16px", border:"none", borderBottom: tab===id?"3px solid #557a8c":"3px solid transparent", background:"none", cursor:"pointer", fontWeight:700, fontSize:12, color: tab===id?"#557a8c":"#557a8c", marginBottom:-2, transition:"all 0.2s" }}>{l}</button>
             ))}
           </div>
           {tab==="ai" && (
             <div>
-              <p style={{ color:"#888", fontSize:14, marginBottom:18 }}>AI-powered search — describe any product naturally or upload an image.</p>
+              <p style={{ color:"#557a8c", fontSize:14, marginBottom:18 }}>AI-powered search — describe any product naturally or upload an image.</p>
               <div style={{ display:"flex", gap:14, marginBottom: 24 }}>
-                <div style={{ flex:1, background:"#F4F6FA", borderRadius:18, padding:"18px 24px", display:"flex", alignItems:"center", gap:14, border:"2px solid transparent", transition:"border 0.2s" }}>
+                <div style={{ flex:1, background:"#F4F6FA", borderRadius:18, padding:"18px 24px", display:"flex", alignItems:"center", gap:14, border:"2px solid transparent", transition:"border 0.2s", position: "relative" }}>
                   <Search size={22} color="#aaa"/>
-                  <input placeholder="Search products, categories, or brands..." style={{ flex:1, border:"none", background:"none", outline:"none", fontSize:17, color:"#333" }}/>
+                  <input 
+                    value={searchQuery} 
+                    onChange={handleSearch} 
+                    placeholder="Search products, categories, or brands..." 
+                    style={{ flex:1, border:"none", background:"none", outline:"none", fontSize:17, color:"#333" }}
+                  />
+                  {searchResults.length > 0 && (
+                    <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#fff", borderRadius: 16, marginTop: 8, boxShadow: "0 10px 40px rgba(0,0,0,0.1)", zIndex: 100, maxHeight: 300, overflowY: "auto", padding: 8 }}>
+                      {searchResults.map((item, idx) => (
+                        <div key={idx} onClick={() => navigate('/all-categories')} style={{ padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", borderRadius: 10, transition: "background 0.1s" }} onMouseEnter={e => e.currentTarget.style.background = "#f8f9fa"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
+                          ) : (
+                            <div style={{ width: 36, height: 36, borderRadius: 8, background: "#f0f0f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+                              {item.icon || "📂"}
+                            </div>
+                          )}
+                          <div>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: "#333" }}>{item.name}</div>
+                            <div style={{ fontSize: 11, color: "#557a8c" }}>{item.type} {item.parentName ? `in ${item.parentName}` : ""}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <button style={{ background:"#F4F6FA", border:"1px solid #eee", borderRadius:18, padding:"18px 28px", cursor:"pointer", display:"flex", alignItems:"center", gap:10, fontSize:15, fontWeight:600, color:"#555" }}>
                   <Camera size={20}/> Image Search
                 </button>
-                <button style={{ background:"linear-gradient(135deg,#FF6B00,#FF8C42)", color:"#fff", border:"none", borderRadius:18, padding:"18px 36px", cursor:"pointer", fontWeight:700, fontSize:17 }}>🔍 Search</button>
+                <button style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:18, padding:"18px 36px", cursor:"pointer", fontWeight:700, fontSize:17 }}>🔍 Search</button>
               </div>
               <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 6 }}>
                 {[{l:"Product Photos",e:"📸"},{l:"Model Shots",e:"👥"},{l:"Videos",e:"🎥"},{l:"Size Charts",e:"📐"},{l:"Lifestyle",e:"✨"}].map(({l,e})=>(
-                   <button key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 20px", background: "#fff", border: "1px solid #eee", borderRadius: 14, cursor: "pointer", fontSize: 14, fontWeight: 600, color: "#444", whiteSpace: "nowrap", transition: "all 0.2s" }} onMouseEnter={e=>e.currentTarget.style.borderColor="#FF6B00"} onMouseLeave={e=>e.currentTarget.style.borderColor="#eee"}>
+                   <button key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 20px", background: "#fff", border: "1px solid #eee", borderRadius: 14, cursor: "pointer", fontSize: 14, fontWeight: 600, color: "#444", whiteSpace: "nowrap", transition: "all 0.2s" }} onMouseEnter={e=>e.currentTarget.style.borderColor="#557a8c"} onMouseLeave={e=>e.currentTarget.style.borderColor="#eee"}>
                      <span>{e}</span> {l}
                    </button>
                 ))}
@@ -362,7 +402,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
               <div style={{ fontSize:56, marginBottom:14, animation:"float 3s ease-in-out infinite" }}>🔮</div>
               <h3 style={{ color:"#fff", fontWeight:800, fontSize:18, margin:"0 0 8px" }}>3D Product Viewer</h3>
               <p style={{ color:"rgba(255,255,255,0.55)", fontSize:13, marginBottom:18 }}>Explore products from every angle with immersive 3D technology. Zoom, rotate, and inspect before buying.</p>
-              <button onClick={() => navigate('/quickart3d')} style={{ background:"#00D4FF", color:"#1a1a1a", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Launch 3D Viewer →</button>
+              <button onClick={() => navigate('/quickart3d')} style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Launch 3D Viewer →</button>
             </div>
           )}
           {tab==="vr" && (
@@ -370,7 +410,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
               <div style={{ fontSize:56, marginBottom:14, animation:"float 3s ease-in-out infinite" }}>👗</div>
               <h3 style={{ color:"#fff", fontWeight:800, fontSize:18, margin:"0 0 8px" }}>Virtual Fitone Room</h3>
               <p style={{ color:"rgba(255,255,255,0.55)", fontSize:13, marginBottom:18 }}>Try on clothes and accessories virtually using our AI-powered fitting room technology.</p>
-              <button style={{ background:"#FF69B4", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Enter Fitting Room →</button>
+              <button style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Enter Fitting Room →</button>
             </div>
           )}
           {tab==="ar" && (
@@ -378,29 +418,29 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
               <div style={{ fontSize:56, marginBottom:14, animation:"float 3s ease-in-out infinite" }}>🥽</div>
               <h3 style={{ color:"#fff", fontWeight:800, fontSize:18, margin:"0 0 8px" }}>AR Try-On Technology</h3>
               <p style={{ color:"rgba(255,255,255,0.55)", fontSize:13, marginBottom:18 }}>Place furniture in your room, try glasses, watches — all in augmented reality before you buy.</p>
-              <button onClick={() => navigate('/virtual-fitting-room')} style={{ background:"#FF6B00", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Start AR Experience →</button>
+              <button onClick={() => navigate('/virtual-fitting-room')} style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Start AR Experience →</button>
             </div>
           )}
         </div>
 
         {/* Flash Sale */}
-        <div style={{ background:"linear-gradient(135deg,#1a1a1a,#2d1a00)", borderRadius:20, padding:"18px 26px", marginBottom:26, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:14 }}>
+        <div style={{ background:"linear-gradient(135deg,#111111,#222222)", borderRadius:20, padding:"18px 26px", marginBottom:26, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:14 }}>
           <div style={{ display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
-            <div style={{ background:"#FF6B00", borderRadius:12, padding:"7px 14px", display:"flex", alignItems:"center", gap:6 }}>
+            <div style={{ background:"#557a8c", borderRadius:12, padding:"7px 14px", display:"flex", alignItems:"center", gap:6 }}>
               <span style={{ fontSize:14 }}>⚡</span>
               <span style={{ color:"#fff", fontWeight:800, fontSize:13 }}>FLASH SALE</span>
             </div>
-            <span style={{ color:"rgba(255,255,255,0.6)", fontSize:13 }}>Ends in</span>
+            <span style={{ color:"rgba(255,255,255,0.7)", fontSize:13 }}>Ends in</span>
             <div style={{ display:"flex", gap:6 }}>
               {[[pad(cd.h),"HRS"],[pad(cd.m),"MIN"],[pad(cd.s),"SEC"]].map(([n,l])=>(
-                <div key={l} style={{ background:"#FF6B00", borderRadius:10, padding:"7px 10px", textAlign:"center", minWidth:48 }}>
+                <div key={l} style={{ background:"rgba(255,255,255,0.1)", borderRadius:10, padding:"7px 10px", textAlign:"center", minWidth:48 }}>
                   <div style={{ color:"#fff", fontSize:17, fontWeight:800, lineHeight:1 }}>{n}</div>
-                  <div style={{ color:"rgba(255,255,255,0.65)", fontSize:8, letterSpacing:1 }}>{l}</div>
+                  <div style={{ color:"rgba(255,255,255,0.7)", fontSize:8, letterSpacing:1 }}>{l}</div>
                 </div>
               ))}
             </div>
           </div>
-          <button onClick={() => navigate('/all-categories')} style={{ background:"#FF6B00", color:"#fff", border:"none", borderRadius:12, padding:"11px 20px", cursor:"pointer", fontWeight:700, fontSize:13 }}>View All Deals →</button>
+          <button onClick={() => navigate('/all-categories')} style={{ background:"#fff", color:"#557a8c", border:"none", borderRadius:12, padding:"11px 20px", cursor:"pointer", fontWeight:700, fontSize:13 }}>View All Deals →</button>
         </div>
 
         {/* Featured Products */}
@@ -413,7 +453,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
             <div style={{ display:"flex", gap:8 }}>
               <button onClick={()=>setPSlide(s=>Math.max(0,s-1))} style={{ background:"#fff", border:"1px solid #eee", borderRadius:"50%", width:34, height:34, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}><ChevronLeft size={15}/></button>
               <button onClick={()=>setPSlide(s=>Math.min(products.length-3,s+1))} style={{ background:"#1a1a1a", border:"none", borderRadius:"50%", width:34, height:34, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}><ChevronRight size={15} color="#fff"/></button>
-              <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #FF6B00", color:"#FF6B00", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
+              <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #557a8c", color:"#557a8c", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
             </div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
@@ -424,15 +464,17 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         {/* Ad Banners */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:34 }}>
           {[
-            { emoji:"💻", label:"EXCLUSIVE OFFER", title:"Gaming Laptops\nUp to 40% Off", btn:"Shop Electronics →", bg:"linear-gradient(135deg,#1a1a2e,#4F8EF7)", btnColor:"#4F8EF7", path: "/all-categories" },
-            { emoji:"👗", label:"NEW ARRIVALS", title:"Fashion Collection\nSpring 2026", btn:"Explore Fashion →", bg:"linear-gradient(135deg,#200122,#E879A0)", btnColor:"#E879A0", path: "/all-categories" },
+            { emoji:"💻", label:"EXCLUSIVE OFFER", title:"Gaming Laptops\nUp to 40% Off", btn:"Shop Electronics →", bg:"linear-gradient(135deg,#111111,#222222)", btnColor:"#557a8c", path: "/all-categories" },
+            { emoji:"👗", label:"NEW ARRIVALS", title:"Fashion Collection\nSpring 2026", btn:"Explore Fashion →", bg:"linear-gradient(135deg,#4a6878,#557a8c)", btnColor:"#557a8c", path: "/all-categories" },
+            { emoji:"🎧", label:"LIMITED EDITION", title:"Premium Audio\nStudio Quality", btn:"Shop Audio →", bg:"linear-gradient(135deg,#020617,#1e293b)", btnColor:"#557a8c", path: "/all-categories" },
+            { emoji:"👟", label:"TRENDING NOW", title:"Sports Gear\nPro Performance", btn:"Shop Sports →", bg:"linear-gradient(135deg,#111827,#334155)", btnColor:"#557a8c", path: "/all-categories" },
           ].map((ad,i)=>(
             <div key={i} style={{ background:ad.bg, borderRadius:20, padding:"26px 24px", display:"flex", alignItems:"center", gap:20, overflow:"hidden" }}>
               <div style={{ fontSize:54 }}>{ad.emoji}</div>
               <div>
                 <div style={{ color:"rgba(255,255,255,0.55)", fontSize:10, fontWeight:700, letterSpacing:2, marginBottom:6, textTransform:"uppercase" }}>{ad.label}</div>
                 <div style={{ color:"#fff", fontSize:18, fontWeight:800, marginBottom:12, whiteSpace:"pre-line" }}>{ad.title}</div>
-                <button onClick={() => navigate(ad.path)} style={{ background:"#fff", color:ad.btnColor, border:"none", borderRadius:10, padding:"8px 16px", cursor:"pointer", fontWeight:700, fontSize:12 }}>{ad.btn}</button>
+                <button onClick={() => navigate(ad.path)} style={{ background:"#fff", color:ad.btnColor, border:"none", borderRadius:10, padding:"8px 16px", cursor:"pointer", fontWeight:700, fontSize:12, backgroundClip: "text" }}>{ad.btn}</button>
               </div>
             </div>
           ))}
@@ -445,15 +487,15 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
               <span style={{ fontSize:22 }}>📂</span>
               <h2 style={{ fontSize:21, fontWeight:800, color:"#1a1a1a", margin:0 }}>All Categories</h2>
             </div>
-            <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #FF6B00", color:"#FF6B00", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>All →</button>
+            <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #557a8c", color:"#557a8c", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>All →</button>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:12 }}>
             {cats.map((c,i)=>(
               <div key={i} style={{ background:"#fff", borderRadius:16, padding:"18px 10px", textAlign:"center", cursor:"pointer", boxShadow:"0 2px 8px rgba(0,0,0,0.05)", transition:"all 0.2s" }}
-                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 12px 30px ${c.color}20`;}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 12px 30px ${c.color}30`;}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,0.05)";}}>
                 <div style={{ width:50, height:50, background:`${c.color}14`, borderRadius:14, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 10px", fontSize:24 }}>{c.icon}</div>
-                <div style={{ fontSize:11, fontWeight:700, color:"#1a1a1a" }}>{c.name}</div>
+                <div style={{ fontSize:11, fontWeight:700, color:"#1a1a1a" }}>{c.name || c.label}</div>
               </div>
             ))}
           </div>
@@ -486,7 +528,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
             </div>
             <div style={{ display:"flex", gap:8 }}>
               <button style={{ background:"#fff", border:"1px solid #eee", borderRadius:10, padding:"7px 14px", cursor:"pointer", fontSize:12, fontWeight:600, display:"flex", alignItems:"center", gap:5 }}><Filter size={12}/> Filter</button>
-              <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #FF6B00", color:"#FF6B00", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
+              <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #557a8c", color:"#557a8c", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
             </div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
@@ -503,7 +545,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
           <div style={{ display:"flex", flexWrap:"wrap", gap:10 }}>
             {BRANDS.map(b=>(
               <div key={b} style={{ background:"#fff", borderRadius:14, padding:"13px 22px", cursor:"pointer", boxShadow:"0 2px 8px rgba(0,0,0,0.05)", fontWeight:700, fontSize:14, color:"#444", transition:"all 0.2s", border:"1px solid transparent" }}
-                onMouseEnter={e=>{e.currentTarget.style.borderColor="#FF6B00";e.currentTarget.style.color="#FF6B00";}}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="#557a8c";e.currentTarget.style.color="#557a8c";}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor="transparent";e.currentTarget.style.color="#444";}}>
                 {b}
               </div>
@@ -512,11 +554,11 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         </div>
 
         {/* Mobile App Banner */}
-        <div style={{ background:"linear-gradient(135deg,#1a1a1a,#2d1a00,#1a1a1a)", borderRadius:24, padding:"38px 44px", marginBottom:34, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:24, position:"relative", overflow:"hidden" }}>
-          <div style={{ position:"absolute", right:0, top:0, width:400, height:"100%", background:"radial-gradient(ellipse at right,rgba(255,107,0,0.09),transparent)" }}/>
+        <div style={{ background:"linear-gradient(135deg,#111111,#222222)", borderRadius:24, padding:"38px 44px", marginBottom:34, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:24, position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", right:0, top:0, width:400, height:"100%", background:"radial-gradient(ellipse at right,rgba(85, 122, 140, 0.15),transparent)" }}/>
           <div style={{ position:"relative", zIndex:2 }}>
-            <div style={{ color:"#FF6B00", fontSize:11, fontWeight:700, letterSpacing:2, marginBottom:10, textTransform:"uppercase" }}>📱 Mobile App Available</div>
-            <h2 style={{ color:"#fff", fontSize:28, fontWeight:900, margin:"0 0 10px" }}>Shop Smarter with<br/><span style={{ color:"#FF6B00" }}>QuickArt App</span></h2>
+            <div style={{ color:"#f4f6fa", fontSize:11, fontWeight:700, letterSpacing:2, marginBottom:10, textTransform:"uppercase" }}>📱 Mobile App Available</div>
+            <h2 style={{ color:"#fff", fontSize:28, fontWeight:900, margin:"0 0 10px" }}>Shop Smarter with<br/><span style={{ color:"#fff" }}>QuickArt App</span></h2>
             <p style={{ color:"rgba(255,255,255,0.55)", fontSize:13, margin:"0 0 24px", lineHeight:1.7 }}>Scan products, use AR try-on, get exclusive app-only deals.<br/>Available on iOS & Android.</p>
             <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
               <button style={{ background:"#fff", color:"#1a1a1a", border:"none", borderRadius:12, padding:"11px 20px", cursor:"pointer", fontWeight:700, fontSize:13, display:"flex", alignItems:"center", gap:7 }}>
@@ -539,7 +581,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         </div>
 
         {/* Newsletter */}
-        <div style={{ background:"linear-gradient(135deg,#FF6B00,#FF8C42)", borderRadius:20, padding:"32px 40px", marginBottom:34, textAlign:"center" }}>
+        <div style={{ background:"#111111", borderRadius:20, padding:"32px 40px", marginBottom:34, textAlign:"center" }}>
           <h2 style={{ color:"#fff", fontSize:24, fontWeight:800, margin:"0 0 8px" }}>Stay in the Loop 📬</h2>
           <p style={{ color:"rgba(255,255,255,0.8)", fontSize:14, margin:"0 0 20px" }}>Get exclusive deals, new arrivals, and tech news delivered to your inbox.</p>
           <div style={{ display:"flex", gap:10, maxWidth:420, margin:"0 auto" }}>
@@ -549,21 +591,21 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         </div>
 
         {/* Admin Panel Access Banner */}
-        <div style={{ background:"linear-gradient(135deg,#1e293b,#0f172a)", borderRadius:24, padding:"36px 44px", marginBottom:34, display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.15)", border:"1px solid rgba(255,255,255,0.05)" }}>
-            <div style={{ position:"absolute", top:-60, right:-60, width:240, height:240, background:"radial-gradient(circle, rgba(79, 142, 247, 0.1) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
-            <div style={{ position:"absolute", bottom:-40, left:40, width:180, height:180, background:"radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
+        <div style={{ background:"linear-gradient(135deg,#4a6878,#557a8c)", borderRadius:24, padding:"36px 44px", marginBottom:34, display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.15)", border:"1px solid rgba(255,255,255,0.05)" }}>
+            <div style={{ position:"absolute", top:-60, right:-60, width:240, height:240, background:"radial-gradient(circle, rgba(85, 122, 140, 0.1) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
+            <div style={{ position:"absolute", bottom:-40, left:40, width:180, height:180, background:"radial-gradient(circle, rgba(85, 122, 140, 0.08) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
             
             <div style={{ position:"relative", zIndex:2, maxWidth:600 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
                     <div style={{ background:"rgba(255,255,255,0.08)", padding:"10px", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Settings size={22} color="#4F8EF7" />
+                        <Settings size={22} color="#f4f6fa" />
                     </div>
                     <div style={{ display:"flex", flexDirection:"column" }}>
-                        <span style={{ color:"#4F8EF7", fontSize:11, fontWeight:700, letterSpacing:1.5, textTransform:"uppercase" }}>Administrator</span>
+                        <span style={{ color:"#f4f6fa", fontSize:11, fontWeight:700, letterSpacing:1.5, textTransform:"uppercase" }}>Administrator</span>
                         <h2 style={{ color:"#fff", fontSize:26, fontWeight:800, margin:0, lineHeight:1.2 }}>Store Management Dashboard</h2>
                     </div>
                 </div>
-                <p style={{ color:"#94a3b8", fontSize:14, margin:0, lineHeight:1.6 }}>
+                <p style={{ color:"#e2e8f0", fontSize:14, margin:0, lineHeight:1.6 }}>
                     Access the backend to manage inventory, track orders, update categories, and configure store settings. 
                     <span style={{ color:"rgba(255,255,255,0.4)", marginLeft:6 }}>Authorized personnel only.</span>
                 </p>
@@ -573,16 +615,16 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
                 onClick={()=>navigate('/admin')} 
                 style={{ 
                     position:"relative", zIndex:2, 
-                    background:"linear-gradient(135deg,#4F8EF7,#2563EB)", 
+                    background:"#557a8c", 
                     color:"#fff", border:"none", borderRadius:14, 
                     padding:"16px 32px", cursor:"pointer", 
                     fontWeight:700, fontSize:14, 
                     display:"flex", alignItems:"center", gap:10, 
-                    boxShadow:"0 8px 24px rgba(37, 99, 235, 0.25)", 
+                    boxShadow:"0 8px 24px rgba(85, 122, 140, 0.25)", 
                     transition:"all 0.2s ease" 
                 }}
-                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 30px rgba(37, 99, 235, 0.35)";}} 
-                onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 8px 24px rgba(37, 99, 235, 0.25)";}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 30px rgba(85, 122, 140, 0.35)";}} 
+                onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 8px 24px rgba(85, 122, 140, 0.25)";}}
             >
                 Enter Admin Panel <ArrowRight size={18} />
             </button>

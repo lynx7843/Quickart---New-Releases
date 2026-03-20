@@ -22,7 +22,7 @@
 .bg1 {
   width: 400px;
   height: 400px;
-  background: rgba(255, 107, 0, 0.15);
+  background: rgba(85, 122, 140, 0.15);
   top: -100px;
   left: -100px;
 }
@@ -54,7 +54,7 @@
 .logo-box {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #FF6B00, #FF8C42);
+  background: linear-gradient(135deg, #557a8c, #7090a0);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -136,8 +136,8 @@
 }
 
 .input-box input:focus {
-  border-color: #FF6B00;
-  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+  border-color: #557a8c;
+  box-shadow: 0 0 0 3px rgba(85, 122, 140, 0.1);
   background: white;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .input-box:focus-within .icon-left {
-    color: #FF6B00;
+    color: #557a8c;
 }
 
 .password-header {
@@ -165,7 +165,7 @@
 .password-header a {
   font-size: 12px;
   font-weight: 600;
-  color: #FF6B00;
+  color: #557a8c;
   text-decoration: none;
 }
 .password-header a:hover {
@@ -186,7 +186,7 @@
 
 .login-btn {
   width: 100%;
-  background: linear-gradient(135deg, #1a1a1a, #333);
+  background: #557a8c;
   color: white;
   border: none;
   border-radius: 12px;
@@ -204,7 +204,7 @@
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(85, 122, 140, 0.35);
 }
 
 .divider {
@@ -256,4 +256,17 @@
 .social-btn:hover {
   border-color: #ccc;
   background: #f5f5f5;
+}
+
+.signup {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.signup a {
+  color: #557a8c;
+  font-weight: 700;
+  text-decoration: none;
 }

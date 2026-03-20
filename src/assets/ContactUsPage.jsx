@@ -11,21 +11,21 @@ const ContactUsPage = () => {
           
           <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><Mail color="#FF6B00" /></div>
+              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><Mail color="#557a8c" /></div>
               <div>
                 <div style={{ fontSize: "12px", color: "#888" }}>Email us at</div>
                 <div style={{ fontWeight: 600 }}>support@quickart.com</div>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><Phone color="#FF6B00" /></div>
+              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><Phone color="#557a8c" /></div>
               <div>
                 <div style={{ fontSize: "12px", color: "#888" }}>Call us at</div>
                 <div style={{ fontWeight: 600 }}>+94 11 234 5678</div>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><MapPin color="#FF6B00" /></div>
+              <div style={{ background: "#333", padding: "12px", borderRadius: "12px" }}><MapPin color="#557a8c" /></div>
               <div>
                 <div style={{ fontSize: "12px", color: "#888" }}>Visit us</div>
                 <div style={{ fontWeight: 600 }}>Colombo 07, Sri Lanka</div>
@@ -40,7 +40,7 @@ const ContactUsPage = () => {
             <input type="text" placeholder="Your Name" style={{ padding: "16px", borderRadius: "12px", border: "1px solid #eee", background: "#f9f9f9", outline: "none", fontSize: "14px" }} />
             <input type="email" placeholder="Your Email" style={{ padding: "16px", borderRadius: "12px", border: "1px solid #eee", background: "#f9f9f9", outline: "none", fontSize: "14px" }} />
             <textarea rows="4" placeholder="How can we help?" style={{ padding: "16px", borderRadius: "12px", border: "1px solid #eee", background: "#f9f9f9", outline: "none", fontSize: "14px", resize: "none" }}></textarea>
-            <button type="button" style={{ background: "#FF6B00", color: "white", padding: "16px", borderRadius: "12px", border: "none", fontWeight: 700, fontSize: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginTop: "10px" }}>
+            <button type="button" style={{ background: "#557a8c", color: "white", padding: "16px", borderRadius: "12px", border: "none", fontWeight: 700, fontSize: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginTop: "10px" }}>
               Send Message <Send size={18} />
             </button>
           </form>

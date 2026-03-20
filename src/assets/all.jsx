@@ -8,7 +8,7 @@ function StarRating({ rating }) {
   return (
     <div style={{ display:"flex", gap:2 }}>
       {[1,2,3,4,5].map(i => (
-        <Star key={i} size={12} fill={i<=Math.floor(rating)?"#FF6B00":"none"} color={i<=rating?"#FF6B00":"#ddd"} />
+        <Star key={i} size={12} fill={i<=Math.floor(rating)?"#557a8c":"none"} color={i<=rating?"#557a8c":"#ddd"} />
       ))}
     </div>
   );
@@ -38,7 +38,7 @@ function ProductCard({ product: p, onAdd, onWish, wished }) {
         </div>
       </div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop: 8 }}>
-        <div style={{ fontSize:16, fontWeight:800, color:"#FF6B00" }}>LKR {p.price.toLocaleString()}</div>
+        <div style={{ fontSize:16, fontWeight:800, color:"#111111" }}>LKR {p.price.toLocaleString()}</div>
         <div style={{ display:"flex", gap:6 }}>
           <button onClick={(e)=>{e.stopPropagation(); onWish(p.id)}} style={{ width:28, height:28, borderRadius:"50%", border:"1px solid #eee", background:"#fff", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <Heart size={14} color={wished?"#ef4444":"#888"} fill={wished?"#ef4444":"none"}/>
@@ -52,58 +52,35 @@ function ProductCard({ product: p, onAdd, onWish, wished }) {
   );
 }
 
-const categoriesData = [
+export const categoriesData = [
   {
     id: "fashion",
     name: "Fashion",
     icon: "👕",
     subCategories: [
-      { name: "Men's Casual Shirts", image: "" },
-      { name: "Men's Formal Shirts", image: "" },
-      { name: "Men's T-Shirts", image: "" },
-      { name: "Men's Jeans", image: "" },
-      { name: "Men's Chinos", image: "" },
-      { name: "Men's Shorts", image: "" },
-      { name: "Jackets & Coats", image: "" },
-      { name: "Men's Innerwear", image: "" },
-      { name: "Men's Ethnic Wear", image: "" },
-      { name: "Men's Shoes", image: "" },
-      { name: "Women's Dresses", image: "" },
-      { name: "Tops & Blouses", image: "" },
-      { name: "Skirts", image: "" },
-      { name: "Women's Jeans & Pants", image: "" },
-      { name: "Sarees & Ethnic Wear", image: "" },
-      { name: "Handbags", image: "" },
-      { name: "Women's Footwear", image: "" },
-      { name: "Jewelry", image: "" },
-      { name: "Boys Clothing", image: "" },
-      { name: "Girls Clothing", image: "" },
-      { name: "Baby Wear", image: "" },
-      { name: "School Wear", image: "" },
-      { name: "Toys", image: "" },
-      { name: "Men's Casual Shirts", image: "/images/fashion/men-casual-shirt.jpg" },
-      { name: "Men's Formal Shirts", image: "/images/fashion/men-formal-shirt.jpg" },
-      { name: "Men's T-Shirts", image: "/images/fashion/men-t-shirt.jpg" },
-      { name: "Men's Jeans", image: "/images/fashion/men-jeans.jpg" },
-      { name: "Men's Chinos", image: "/images/fashion/men-chinos.jpg" },
-      { name: "Men's Shorts", image: "/images/fashion/men-shorts.jpg" },
-      { name: "Jackets & Coats", image: "/images/fashion/jackets.jpg" },
-      { name: "Men's Innerwear", image: "/images/fashion/men-innerwear.jpg" },
-      { name: "Men's Ethnic Wear", image: "/images/fashion/men-ethnic.jpg" },
-      { name: "Men's Shoes", image: "/images/fashion/men-shoes.jpg" },
-      { name: "Women's Dresses", image: "/images/fashion/women-dresses.jpg" },
-      { name: "Tops & Blouses", image: "/images/fashion/women-tops.jpg" },
-      { name: "Skirts", image: "/images/fashion/women-skirts.jpg" },
-      { name: "Women's Jeans & Pants", image: "/images/fashion/women-jeans.jpg" },
-      { name: "Sarees & Ethnic Wear", image: "/images/fashion/women-saree.jpg" },
-      { name: "Handbags", image: "/images/fashion/handbags.jpg" },
-      { name: "Women's Footwear", image: "/images/fashion/women-footwear.jpg" },
-      { name: "Jewelry", image: "/images/fashion/jewelry.jpg" },
-      { name: "Boys Clothing", image: "/images/fashion/kids-boys.jpg" },
-      { name: "Girls Clothing", image: "/images/fashion/kids-girls.jpg" },
-      { name: "Baby Wear", image: "/images/fashion/kids-baby.jpg" },
-      { name: "School Wear", image: "/images/fashion/kids-school.jpg" },
-      { name: "Toys", image: "/images/fashion/toys.jpg" },
+      { name: "Men's Casual Shirts", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Formal Shirts", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's T-Shirts", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Jeans", image: "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Chinos", image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Shorts", image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=300&q=80" },
+      { name: "Jackets & Coats", image: "https://images.unsplash.com/photo-1551028919-30164bd466c4?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Innerwear", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Ethnic Wear", image: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?auto=format&fit=crop&w=300&q=80" },
+      { name: "Men's Shoes", image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=300&q=80" },
+      { name: "Women's Dresses", image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=300&q=80" },
+      { name: "Tops & Blouses", image: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?auto=format&fit=crop&w=300&q=80" },
+      { name: "Skirts", image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=300&q=80" },
+      { name: "Women's Jeans & Pants", image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=300&q=80" },
+      { name: "Sarees & Ethnic Wear", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80" },
+      { name: "Handbags", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=300&q=80" },
+      { name: "Women's Footwear", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=300&q=80" },
+      { name: "Jewelry", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80" },
+      { name: "Boys Clothing", image: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=300&q=80" },
+      { name: "Girls Clothing", image: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=300&q=80" },
+      { name: "Baby Wear", image: "https://images.unsplash.com/photo-1522771930-78848d9293e8?auto=format&fit=crop&w=300&q=80" },
+      { name: "School Wear", image: "https://images.unsplash.com/photo-1627555170471-1523c7433dc8?auto=format&fit=crop&w=300&q=80" },
+      { name: "Toys", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -111,24 +88,15 @@ const categoriesData = [
     name: "Electronics",
     icon: "📱",
     subCategories: [
-      { name: "Mobile Phones", image: "" },
-      { name: "Laptops", image: "" },
-      { name: "Tablets", image: "" },
-      { name: "Smart Watches", image: "" },
-      { name: "Headphones & Earbuds", image: "" },
-      { name: "Cameras", image: "" },
-      { name: "Gaming Consoles", image: "" },
-      { name: "Chargers & Cables", image: "" },
-      { name: "Power Banks", image: "" },
-      { name: "Mobile Phones", image: "/images/electronics/phones.jpg" },
-      { name: "Laptops", image: "/images/electronics/laptops.jpg" },
-      { name: "Tablets", image: "/images/electronics/tablets.jpg" },
-      { name: "Smart Watches", image: "/images/electronics/watches.jpg" },
-      { name: "Headphones & Earbuds", image: "/images/electronics/headphones.jpg" },
-      { name: "Cameras", image: "/images/electronics/cameras.jpg" },
-      { name: "Gaming Consoles", image: "/images/electronics/consoles.jpg" },
-      { name: "Chargers & Cables", image: "/images/electronics/chargers.jpg" },
-      { name: "Power Banks", image: "/images/electronics/powerbanks.jpg" },
+      { name: "Mobile Phones", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80" },
+      { name: "Laptops", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=300&q=80" },
+      { name: "Tablets", image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=300&q=80" },
+      { name: "Smart Watches", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=300&q=80" },
+      { name: "Headphones & Earbuds", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80" },
+      { name: "Cameras", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=300&q=80" },
+      { name: "Gaming Consoles", image: "https://images.unsplash.com/photo-1486401899868-0e435ed85128?auto=format&fit=crop&w=300&q=80" },
+      { name: "Chargers & Cables", image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=300&q=80" },
+      { name: "Power Banks", image: "https://images.unsplash.com/photo-1609592424248-97c7f26f28b7?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -136,26 +104,16 @@ const categoriesData = [
     name: "Home & Living",
     icon: "🏠",
     subCategories: [
-      { name: "Sofas", image: "" },
-      { name: "Beds", image: "" },
-      { name: "Tables", image: "" },
-      { name: "Microwaves", image: "" },
-      { name: "Blenders", image: "" },
-      { name: "Wall Art", image: "" },
-      { name: "Lighting", image: "" },
-      { name: "Bedsheets", image: "" },
-      { name: "Pillows", image: "" },
-      { name: "Storage & Organization", image: "" },
-      { name: "Sofas", image: "/images/home/sofas.jpg" },
-      { name: "Beds", image: "/images/home/beds.jpg" },
-      { name: "Tables", image: "/images/home/tables.jpg" },
-      { name: "Microwaves", image: "/images/home/microwaves.jpg" },
-      { name: "Blenders", image: "/images/home/blenders.jpg" },
-      { name: "Wall Art", image: "/images/home/wall-art.jpg" },
-      { name: "Lighting", image: "/images/home/lighting.jpg" },
-      { name: "Bedsheets", image: "/images/home/bedsheets.jpg" },
-      { name: "Pillows", image: "/images/home/pillows.jpg" },
-      { name: "Storage & Organization", image: "/images/home/storage.jpg" },
+      { name: "Sofas", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&q=80" },
+      { name: "Beds", image: "https://images.unsplash.com/photo-1505693416388-b0346ef41495?auto=format&fit=crop&w=300&q=80" },
+      { name: "Tables", image: "https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=300&q=80" },
+      { name: "Microwaves", image: "https://images.unsplash.com/photo-1585659722983-3a6752029399?auto=format&fit=crop&w=300&q=80" },
+      { name: "Blenders", image: "https://images.unsplash.com/photo-1570222094114-28a9d8894b74?auto=format&fit=crop&w=300&q=80" },
+      { name: "Wall Art", image: "https://images.unsplash.com/photo-1582658114383-a918a945b439?auto=format&fit=crop&w=300&q=80" },
+      { name: "Lighting", image: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=300&q=80" },
+      { name: "Bedsheets", image: "https://images.unsplash.com/photo-1522771753035-4a5035252f35?auto=format&fit=crop&w=300&q=80" },
+      { name: "Pillows", image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e6?auto=format&fit=crop&w=300&q=80" },
+      { name: "Storage & Organization", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -163,16 +121,11 @@ const categoriesData = [
     name: "Beauty & Personal Care",
     icon: "🧴",
     subCategories: [
-      { name: "Face Wash & Creams", image: "" },
-      { name: "Shampoo & Hair Oil", image: "" },
-      { name: "Lipstick & Foundation", image: "" },
-      { name: "Perfume & Deodorant", image: "" },
-      { name: "Trimmers & Razors", image: "" },
-      { name: "Face Wash & Creams", image: "/images/beauty/skincare.jpg" },
-      { name: "Shampoo & Hair Oil", image: "/images/beauty/haircare.jpg" },
-      { name: "Lipstick & Foundation", image: "/images/beauty/makeup.jpg" },
-      { name: "Perfume & Deodorant", image: "/images/beauty/fragrances.jpg" },
-      { name: "Trimmers & Razors", image: "/images/beauty/grooming.jpg" },
+      { name: "Face Wash & Creams", image: "https://images.unsplash.com/photo-1556228552-6c3638d6e388?auto=format&fit=crop&w=300&q=80" },
+      { name: "Shampoo & Hair Oil", image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=300&q=80" },
+      { name: "Lipstick & Foundation", image: "https://images.unsplash.com/photo-1596462502278-27bfdd403348?auto=format&fit=crop&w=300&q=80" },
+      { name: "Perfume & Deodorant", image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=300&q=80" },
+      { name: "Trimmers & Razors", image: "https://images.unsplash.com/photo-1621607512214-68297480165e?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -180,18 +133,12 @@ const categoriesData = [
     name: "Groceries",
     icon: "🥗",
     subCategories: [
-      { name: "Fruits & Vegetables", image: "" },
-      { name: "Dairy Products", image: "" },
-      { name: "Snacks & Beverages", image: "" },
-      { name: "Rice & Grains", image: "" },
-      { name: "Spices", image: "" },
-      { name: "Frozen Foods", image: "" },
-      { name: "Fruits & Vegetables", image: "/images/groceries/fresh.jpg" },
-      { name: "Dairy Products", image: "/images/groceries/dairy.jpg" },
-      { name: "Snacks & Beverages", image: "/images/groceries/snacks.jpg" },
-      { name: "Rice & Grains", image: "/images/groceries/grains.jpg" },
-      { name: "Spices", image: "/images/groceries/spices.jpg" },
-      { name: "Frozen Foods", image: "/images/groceries/frozen.jpg" },
+      { name: "Fruits & Vegetables", image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=300&q=80" },
+      { name: "Dairy Products", image: "https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=300&q=80" },
+      { name: "Snacks & Beverages", image: "https://images.unsplash.com/photo-1621939514649-28b12e81658b?auto=format&fit=crop&w=300&q=80" },
+      { name: "Rice & Grains", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=300&q=80" },
+      { name: "Spices", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=300&q=80" },
+      { name: "Frozen Foods", image: "https://images.unsplash.com/photo-1627483262268-9c96d8a36740?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -199,16 +146,11 @@ const categoriesData = [
     name: "Sports & Fitness",
     icon: "⚽",
     subCategories: [
-      { name: "Gym Equipment", image: "" },
-      { name: "Sports Wear", image: "" },
-      { name: "Outdoor Games", image: "" },
-      { name: "Indoor Games", image: "" },
-      { name: "Yoga Mats & Dumbbells", image: "" },
-      { name: "Gym Equipment", image: "/images/sports/gym.jpg" },
-      { name: "Sports Wear", image: "/images/sports/wear.jpg" },
-      { name: "Outdoor Games", image: "/images/sports/outdoor.jpg" },
-      { name: "Indoor Games", image: "/images/sports/indoor.jpg" },
-      { name: "Yoga Mats & Dumbbells", image: "/images/sports/accessories.jpg" },
+      { name: "Gym Equipment", image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=300&q=80" },
+      { name: "Sports Wear", image: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=300&q=80" },
+      { name: "Outdoor Games", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=300&q=80" },
+      { name: "Indoor Games", image: "https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?auto=format&fit=crop&w=300&q=80" },
+      { name: "Yoga Mats & Dumbbells", image: "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -216,16 +158,11 @@ const categoriesData = [
     name: "Automotive",
     icon: "🚗",
     subCategories: [
-      { name: "Car Accessories", image: "" },
-      { name: "Bike Accessories", image: "" },
-      { name: "Spare Parts", image: "" },
-      { name: "Engine Oil", image: "" },
-      { name: "Car Electronics", image: "" },
-      { name: "Car Accessories", image: "/images/auto/car-accessories.jpg" },
-      { name: "Bike Accessories", image: "/images/auto/bike-accessories.jpg" },
-      { name: "Spare Parts", image: "/images/auto/spare-parts.jpg" },
-      { name: "Engine Oil", image: "/images/auto/oil.jpg" },
-      { name: "Car Electronics", image: "/images/auto/car-electronics.jpg" },
+      { name: "Car Accessories", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=300&q=80" },
+      { name: "Bike Accessories", image: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80" },
+      { name: "Spare Parts", image: "https://images.unsplash.com/photo-1486262715619-01b80250e0dc?auto=format&fit=crop&w=300&q=80" },
+      { name: "Engine Oil", image: "https://images.unsplash.com/photo-1508974239320-0a08f37e3c9f?auto=format&fit=crop&w=300&q=80" },
+      { name: "Car Electronics", image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -233,16 +170,11 @@ const categoriesData = [
     name: "Books & Education",
     icon: "📚",
     subCategories: [
-      { name: "School Books", image: "" },
-      { name: "Novels", image: "" },
-      { name: "Educational Books", image: "" },
-      { name: "Stationery", image: "" },
-      { name: "E-learning Materials", image: "" },
-      { name: "School Books", image: "/images/books/school.jpg" },
-      { name: "Novels", image: "/images/books/novels.jpg" },
-      { name: "Educational Books", image: "/images/books/educational.jpg" },
-      { name: "Stationery", image: "/images/books/stationery.jpg" },
-      { name: "E-learning Materials", image: "/images/books/elearning.jpg" },
+      { name: "School Books", image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=300&q=80" },
+      { name: "Novels", image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=300&q=80" },
+      { name: "Educational Books", image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=300&q=80" },
+      { name: "Stationery", image: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=300&q=80" },
+      { name: "E-learning Materials", image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -250,14 +182,10 @@ const categoriesData = [
     name: "Pets",
     icon: "🐶",
     subCategories: [
-      { name: "Pet Food", image: "" },
-      { name: "Pet Toys", image: "" },
-      { name: "Pet Accessories", image: "" },
-      { name: "Grooming Products", image: "" },
-      { name: "Pet Food", image: "/images/pets/food.jpg" },
-      { name: "Pet Toys", image: "/images/pets/toys.jpg" },
-      { name: "Pet Accessories", image: "/images/pets/accessories.jpg" },
-      { name: "Grooming Products", image: "/images/pets/grooming.jpg" },
+      { name: "Pet Food", image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=300&q=80" },
+      { name: "Pet Toys", image: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=300&q=80" },
+      { name: "Pet Accessories", image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=300&q=80" },
+      { name: "Grooming Products", image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -265,14 +193,10 @@ const categoriesData = [
     name: "Gaming",
     icon: "🎮",
     subCategories: [
-      { name: "Video Games", image: "" },
-      { name: "Consoles", image: "" },
-      { name: "Gaming Accessories", image: "" },
-      { name: "PC Gaming Parts", image: "" },
-      { name: "Video Games", image: "/images/gaming/games.jpg" },
-      { name: "Consoles", image: "/images/gaming/consoles.jpg" },
-      { name: "Gaming Accessories", image: "/images/gaming/accessories.jpg" },
-      { name: "PC Gaming Parts", image: "/images/gaming/pc-parts.jpg" },
+      { name: "Video Games", image: "https://images.unsplash.com/photo-1592840496011-8b5209bdb0c5?auto=format&fit=crop&w=300&q=80" },
+      { name: "Consoles", image: "https://images.unsplash.com/photo-1593118247619-e2d6f056869e?auto=format&fit=crop&w=300&q=80" },
+      { name: "Gaming Accessories", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=80" },
+      { name: "PC Gaming Parts", image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -280,14 +204,10 @@ const categoriesData = [
     name: "Travel & Lifestyle",
     icon: "🧳",
     subCategories: [
-      { name: "Bags & Luggage", image: "" },
-      { name: "Travel Accessories", image: "" },
-      { name: "Sunglasses", image: "" },
-      { name: "Watches", image: "" },
-      { name: "Bags & Luggage", image: "/images/travel/luggage.jpg" },
-      { name: "Travel Accessories", image: "/images/travel/accessories.jpg" },
-      { name: "Sunglasses", image: "/images/travel/sunglasses.jpg" },
-      { name: "Watches", image: "/images/travel/watches.jpg" },
+      { name: "Bags & Luggage", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=300&q=80" },
+      { name: "Travel Accessories", image: "https://images.unsplash.com/photo-1565514020176-892eb1036e62?auto=format&fit=crop&w=300&q=80" },
+      { name: "Sunglasses", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=300&q=80" },
+      { name: "Watches", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -295,14 +215,10 @@ const categoriesData = [
     name: "Health & Medical",
     icon: "🏥",
     subCategories: [
-      { name: "Medicines (OTC)", image: "" },
-      { name: "Supplements", image: "" },
-      { name: "Medical Devices (BP Monitor)", image: "" },
-      { name: "First Aid", image: "" },
-      { name: "Medicines (OTC)", image: "/images/health/medicines.jpg" },
-      { name: "Supplements", image: "/images/health/supplements.jpg" },
-      { name: "Medical Devices (BP Monitor)", image: "/images/health/devices.jpg" },
-      { name: "First Aid", image: "/images/health/first-aid.jpg" },
+      { name: "Medicines (OTC)", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80" },
+      { name: "Supplements", image: "https://images.unsplash.com/photo-1511688878353-3a2f5be94c54?auto=format&fit=crop&w=300&q=80" },
+      { name: "Medical Devices (BP Monitor)", image: "https://images.unsplash.com/photo-1576091160550-2187d80aeff2?auto=format&fit=crop&w=300&q=80" },
+      { name: "First Aid", image: "https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&w=300&q=80" },
     ]
   },
   {
@@ -310,14 +226,25 @@ const categoriesData = [
     name: "Gifts & Special Items",
     icon: "🎁",
     subCategories: [
-      { name: "Birthday Gifts", image: "" },
-      { name: "Anniversary Gifts", image: "" },
-      { name: "Customized Gifts", image: "" },
-      { name: "Flowers", image: "" },
-      { name: "Birthday Gifts", image: "/images/gifts/birthday.jpg" },
-      { name: "Anniversary Gifts", image: "/images/gifts/anniversary.jpg" },
-      { name: "Customized Gifts", image: "/images/gifts/custom.jpg" },
-      { name: "Flowers", image: "/images/gifts/flowers.jpg" },
+      { name: "Birthday Gifts", image: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=300&q=80" },
+      { name: "Anniversary Gifts", image: "https://images.unsplash.com/photo-1512909481869-0eaa1e981756?auto=format&fit=crop&w=300&q=80" },
+      { name: "Customized Gifts", image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=300&q=80" },
+      { name: "Flowers", image: "https://images.unsplash.com/photo-1490750967868-58cb75069ed6?auto=format&fit=crop&w=300&q=80" },
+    ]
+  },
+  {
+    id: "brands",
+    name: "Top Brands",
+    icon: "🏆",
+    subCategories: [
+      { name: "NEXUS AI", image: "https://ui-avatars.com/api/?name=Nexus+AI&background=0D8ABC&color=fff&size=200" },
+      { name: "AURA", image: "https://ui-avatars.com/api/?name=AURA&background=FF6B00&color=fff&size=200" },
+      { name: "QuantumLeap", image: "https://ui-avatars.com/api/?name=Quantum&background=6366F1&color=fff&size=200" },
+      { name: "Stellar", image: "https://ui-avatars.com/api/?name=Stellar&background=EC4899&color=fff&size=200" },
+      { name: "Nova", image: "https://ui-avatars.com/api/?name=Nova&background=8B5CF6&color=fff&size=200" },
+      { name: "Orion", image: "https://ui-avatars.com/api/?name=Orion&background=10B981&color=fff&size=200" },
+      { name: "CyberCore", image: "https://ui-avatars.com/api/?name=Cyber&background=F59E0B&color=fff&size=200" },
+      { name: "Zenith", image: "https://ui-avatars.com/api/?name=Zenith&background=14B8A6&color=fff&size=200" },
     ]
   },
 ];
@@ -417,9 +344,9 @@ const AllCategory = ({ products = [] }) => {
           color: #1a1a1a;
         }
         .sidebar-item.active {
-          background: #fff5f0;
-          color: #ff6b00;
-          border-left-color: #ff6b00;
+          background: rgba(85, 122, 140, 0.1);
+          color: #557a8c;
+          border-left-color: #557a8c;
         }
         .sidebar-item .item-icon {
           margin-right: 12px;
@@ -462,7 +389,7 @@ const AllCategory = ({ products = [] }) => {
           position: absolute;
           top: 0; right: 0;
           width: 300px; height: 100%;
-          background: linear-gradient(90deg, transparent, #fff5f0);
+          background: linear-gradient(90deg, transparent, rgba(85, 122, 140, 0.05));
           pointer-events: none;
         }
 
@@ -494,8 +421,8 @@ const AllCategory = ({ products = [] }) => {
         }
         .search-wrapper:focus-within {
           background: #fff;
-          border-color: #ff6b00;
-          box-shadow: 0 4px 12px rgba(255, 107, 0, 0.1);
+          border-color: #557a8c;
+          box-shadow: 0 4px 12px rgba(85, 122, 140, 0.15);
         }
         .search-input {
           border: none;
@@ -553,24 +480,24 @@ const AllCategory = ({ products = [] }) => {
           font-size: 14px;
         }
         .sub-card:hover .sub-name {
-          color: #ff6b00;
+          color: #557a8c;
         }
         .add-to-cart-btn {
           margin-top: 12px;
           padding: 8px 16px;
           font-size: 12px;
           font-weight: 700;
-          background: #fff5f0;
-          color: #ff6b00;
-          border: 1px solid #ffddc2;
+          background: rgba(85, 122, 140, 0.1);
+          color: #557a8c;
+          border: 1px solid rgba(85, 122, 140, 0.3);
           border-radius: 10px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
         .add-to-cart-btn:hover {
-          background: #ff6b00;
+          background: #557a8c;
           color: white;
-          border-color: #ff6b00;
+          border-color: #557a8c;
         }
 
         /* Empty State */
@@ -663,14 +590,14 @@ const AllCategory = ({ products = [] }) => {
                   </div>
                   <div style={{ display:"flex", gap:8 }}>
                     <button style={{ background:"#fff", border:"1px solid #eee", borderRadius:10, padding:"7px 14px", cursor:"pointer", fontSize:12, fontWeight:600, display:"flex", alignItems:"center", gap:5 }}><Filter size={12}/> Filter</button>
-                    <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #FF6B00", color:"#FF6B00", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
+                    <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #557a8c", color:"#557a8c", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
                   </div>
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
                   {products.map(p=><ProductCard key={p.id} product={p} onAdd={addCart} onWish={toggleWish} wished={wish.includes(p.id)}/>)}
                 </div>
               </div>
-              <Footer />
+            
             </div>
           </div>
         </div>

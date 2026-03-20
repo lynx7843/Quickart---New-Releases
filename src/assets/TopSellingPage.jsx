@@ -24,7 +24,7 @@ const TopSellingPage = () => {
               <span>{p.sales} sold</span>
               <span style={{ display: "flex", alignItems: "center", gap: "4px", color: "#FFD700" }}><Star size={14} fill="#FFD700" /> {p.rating}</span>
             </div>
-            <div style={{ marginTop: "20px", fontSize: "24px", fontWeight: 800, color: "#FF6B00" }}>{p.price}</div>
+            <div style={{ marginTop: "20px", fontSize: "24px", fontWeight: 800, color: "#557a8c" }}>{p.price}</div>
           </div>
         ))}
       </div>

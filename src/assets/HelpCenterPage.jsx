@@ -29,7 +29,7 @@ const HelpCenterPage = () => {
               style={{ width: "100%", textAlign: "left", padding: "20px 24px", background: "white", border: "none", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "16px", fontWeight: 600, color: "#333" }}
             >
               {faq.q}
-              {openIndex === i ? <ChevronUp size={20} color="#FF6B00" /> : <ChevronDown size={20} color="#aaa" />}
+              {openIndex === i ? <ChevronUp size={20} color="#557a8c" /> : <ChevronDown size={20} color="#aaa" />}
             </button>
             {openIndex === i && (
               <div style={{ padding: "0 24px 24px 24px", color: "#666", lineHeight: "1.6", background: "white" }}>
