@@ -418,7 +418,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
               <div style={{ fontSize:56, marginBottom:14, animation:"float 3s ease-in-out infinite" }}>🥽</div>
               <h3 style={{ color:"#fff", fontWeight:800, fontSize:18, margin:"0 0 8px" }}>AR Try-On Technology</h3>
               <p style={{ color:"rgba(255,255,255,0.55)", fontSize:13, marginBottom:18 }}>Place furniture in your room, try glasses, watches — all in augmented reality before you buy.</p>
-              <button onClick={() => navigate('/virtual-fitting-room')} style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Start AR Experience →</button>
+              <button onClick={() => navigate('/ar-viewer')} style={{ background:"#557a8c", color:"#fff", border:"none", borderRadius:12, padding:"11px 22px", cursor:"pointer", fontWeight:700, fontSize:14 }}>Start AR Experience →</button>
             </div>
           )}
         </div>

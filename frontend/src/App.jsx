@@ -7,6 +7,7 @@ import Footer from './assets/Footer.jsx';
 import QuickArtAI from './QuickArtAI.jsx';
 import QuickArt3D from './quickart3d.jsx';
 import VirtualFittingRoom from './VirtualFittingRoom.jsx';
+import ARViewer from './ARViewer.jsx';
 import AllCategory from './assets/all.jsx';
 import Home from './assets/home.jsx';
 import AuthBuilderUI from './AuthBuilderUI.jsx';
@@ -104,6 +105,7 @@ function App() {
               <Route path="/quick-art-ai" element={<QuickArtAI />} />
               <Route path="/quickart3d" element={<QuickArt3D />} />
               <Route path="/virtual-fitting-room" element={<VirtualFittingRoom />} />
+              <Route path="/ar-viewer" element={<ARViewer />} />
               <Route path="/all-categories" element={<AllCategory categories={cats} products={products} />} />
               <Route path="/website-builder" element={<WebsiteBuilder />} />
               <Route path="/cart" element={<CartPage />} />
