@@ -37,15 +37,29 @@ export default function AdminProducts() {
       emoji: categories.find(c => c.id === newProduct.category)?.icon || '📦'
     };
 
-    // Update local state instead of API
-    setProducts(prev => [...prev, { ...product, id: Date.now() }]);
-    setNewProduct({ name: "", price: "", category: "", imageFile: null, imagePreview: "" });
-    notify("Product added locally!");
+    try {
+      const response = await fetch('http://localhost:8080/api/products', { //Make sure this is the correct URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      });
+      if (response.ok) {
+        const savedProduct = await response.json();
+        setProducts(prev => [...prev, savedProduct]);
+        setNewProduct({ name: "", price: "", category: "", imageFile: null, imagePreview: "" });
+        notify("Product added successfully!");
+      } else {
+        notify("Failed to add product.", "error");
+      }
+    } catch (error) {
+      notify("Error connecting to backend.", "error");
+    }
   };
 
   const handleDeleteProduct = async (id) => {
-    setProducts(products.filter(p => p.id !== id)); // Optimistic update
-    notify("Product deleted locally!");
+    await fetch(`http://localhost:8080/api/products/${id}`, { method: 'DELETE' }); //Make sure this is the correct URL
+    setProducts(products.filter(p => p.id !== id));
+    notify("Product deleted successfully!");
   };
 
   const handleImageUpload = (e) => {

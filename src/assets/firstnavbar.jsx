@@ -288,7 +288,7 @@ function Navbar() {
           <ShoppingCart size={24} color="#333" strokeWidth={2} />
           {cartCount > 0 && (
             <span style={{
-              position: 'absolute', top: -5, right: -10, background: '#FF6B00', color: 'white',
+              position: 'absolute', top: -5, right: -10, background: '#557a8c', color: 'white',
               borderRadius: '50%', minWidth: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '10px', fontWeight: 'bold', border: '2px solid white'
             }}>
@@ -314,7 +314,7 @@ function Navbar() {
           </div>
         )}
 
-        <button className="create-account-btn" onClick={() => navigate('/register')} style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.1)' }}>
+        <button className="create-account-btn" onClick={() => navigate('/register')} style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.1)', background: "#557a8c", color: "#fff", border: "none" }}>
           Create account
         </button>
       </div>

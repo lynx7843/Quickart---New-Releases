@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./login.css";
+import "../login.css";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Github, Chrome } from "lucide-react";
 import Footer from "./Footer.jsx";
 import { useAuth } from "../AuthContext.jsx";
@@ -10,19 +10,20 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    try {
-      // Mock Login
-      const mockUser = { name: "Demo User", email: email, token: "mock-jwt-token" };
-      login(mockUser); 
-      navigate('/'); // Redirect to home page
-    } catch (err) {
-      setError(err.message);
+    setLoading(true);
+    const result = await login(email, password);
+    setLoading(false);
+    if (result.success) {
+      navigate('/');
+    } else {
+      setError(result.message || "Invalid email or password. Please try again.");
     }
   };
 
@@ -36,14 +37,10 @@ const LoginPage = () => {
 
         {/* Logo */}
         <div className="logo-section">
-          <div className="logo-container">
-            <span className="logo-icon">⚡</span>
-            <span className="logo-text">
-              <span className="logo-quick">QUICK</span>
-              <span className="logo-cart">🛒</span>
-              <span className="logo-art">ART</span>
-            </span>
+          <div className="logo-box">
+            <span style={{ fontSize: "24px" }}>⚡</span>
           </div>
+          <div className="logo-text">QuickArt</div>
         </div>
 
         <p className="tagline">Smart. Fast. Reliable.</p>
@@ -98,8 +95,8 @@ const LoginPage = () => {
             
             {error && <p className="error" style={{textAlign: 'center', marginTop: '10px'}}>{error}</p>}
 
-            <button className="login-btn">
-              Sign In <ArrowRight size={18} />
+            <button className="login-btn" type="submit" disabled={loading}>
+              {loading ? "Signing In..." : <>Sign In <ArrowRight size={18} /></>}
             </button>
 
           </form>

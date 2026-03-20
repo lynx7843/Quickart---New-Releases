@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext.jsx";
 import "./login.css";
 
 import {
@@ -13,10 +14,12 @@ import {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const [showPassword,setShowPassword] = useState(false);
   const [showConfirmPassword,setShowConfirmPassword] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [formData,setFormData] = useState({
     name:"",
     email:"",
@@ -66,17 +69,22 @@ const RegisterPage = () => {
   const handleSubmit= async (e)=>{
 
     e.preventDefault();
+    setErrors({});
 
     const validationErrors = validate();
 
     if(Object.keys(validationErrors).length>0){
       setErrors(validationErrors);
     }else{
-      try {
+      setLoading(true);
+      const result = await register(formData.name, formData.email, formData.phone, formData.password, formData.confirmPassword);
+      setLoading(false);
+
+      if (result.success) {
         alert("Account Created Successfully! Please log in.");
         navigate('/login');
-      } catch (error) {
-        setErrors({ form: error.message });
+      } else {
+        setErrors({ form: result.message || "Registration failed. The email might already be in use." });
       }
     }
 
@@ -125,6 +133,7 @@ const RegisterPage = () => {
                   name="name"
                   placeholder="Enter your name"
                   onChange={handleChange}
+                  required
                 />
               </div>
 
@@ -143,6 +152,7 @@ const RegisterPage = () => {
                   name="email"
                   placeholder="Enter email"
                   onChange={handleChange}
+                  required
                 />
               </div>
 
@@ -161,6 +171,7 @@ const RegisterPage = () => {
                   name="phone"
                   placeholder="Enter phone number"
                   onChange={handleChange}
+                  required
                 />
               </div>
 
@@ -180,6 +191,7 @@ const RegisterPage = () => {
                   name="password"
                   placeholder="Enter password"
                   onChange={handleChange}
+                  required
                 />
 
                 <button
@@ -207,6 +219,7 @@ const RegisterPage = () => {
                   name="confirmPassword"
                   placeholder="Confirm password"
                   onChange={handleChange}
+                  required
                 />
 
                 <button
@@ -224,8 +237,8 @@ const RegisterPage = () => {
             {errors.form && <p className="error" style={{textAlign: 'center', marginTop: '10px'}}>{errors.form}</p>}
 
 
-            <button className="login-btn">
-              Create Account
+            <button className="login-btn" type="submit" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
 
           </form>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const styles = `
@@ -9,7 +9,7 @@ const styles = `
   .qa-root {
     font-family: 'DM Sans', sans-serif;
     background: #F4F6FA;
-    min-height: 100vh;
+    min-height: calc(100vh - 120px);
     display: flex;
     color: #1a1a1a;
   }
@@ -34,7 +34,7 @@ const styles = `
 
   .qa-logo {
     width: 38px; height: 38px;
-    background: linear-gradient(135deg, #FF5C1A, #FF8A4C);
+    background: #557a8c;
     border-radius: 11px;
     display: flex; align-items: center; justify-content: center;
     font-family: 'Syne', sans-serif;
@@ -42,12 +42,12 @@ const styles = `
     color: #fff;
     font-size: 13px;
     margin-bottom: 14px;
-    box-shadow: 0 4px 14px rgba(255,92,26,0.35);
+    box-shadow: 0 4px 14px rgba(85, 122, 140, 0.35);
   }
 
   .qa-divider {
-    width: 2px; height: 28px;
-    background: linear-gradient(180deg, #FF5C1A, #FF8A4C);
+    width: 3px; height: 28px;
+    background: linear-gradient(180deg, #557a8c, #7090a0);
     border-radius: 2px;
     margin: 6px 0;
   }
@@ -59,12 +59,12 @@ const styles = `
     border: none;
     background: transparent;
     cursor: pointer;
-    color: #888;
+    color: #557a8c;
     transition: all 0.2s ease;
     position: relative;
   }
-  .qa-nav-btn:hover { background: #F4F6FA; color: #FF5C1A; }
-  .qa-nav-btn.active { color: #FF5C1A; background: #F4F6FA; }
+  .qa-nav-btn:hover { background: #eef1f8; color: #557a8c; }
+  .qa-nav-btn.active { color: #557a8c; background: #eef1f8; }
   .qa-nav-btn svg { width: 19px; height: 19px; }
 
   /* MAIN */
@@ -101,19 +101,19 @@ const styles = `
   }
   .qa-blob-1 {
     width: 480px; height: 380px;
-    background: radial-gradient(circle, rgba(255,185,140,0.55), rgba(255,140,80,0.3));
+    background: radial-gradient(circle, rgba(85, 122, 140, 0.3), rgba(85, 122, 140, 0.2));
     top: -120px; right: -60px;
     animation: drift1 9s ease-in-out infinite;
   }
   .qa-blob-2 {
     width: 380px; height: 320px;
-    background: radial-gradient(circle, rgba(255,220,190,0.5), rgba(255,170,110,0.25));
+    background: radial-gradient(circle, rgba(85, 122, 140, 0.25), rgba(85, 122, 140, 0.15));
     bottom: -60px; left: -40px;
     animation: drift2 11s ease-in-out infinite;
   }
   .qa-blob-3 {
     width: 280px; height: 280px;
-    background: radial-gradient(circle, rgba(255,240,225,0.6), rgba(255,200,160,0.2));
+    background: radial-gradient(circle, rgba(137, 162, 179, 0.3), rgba(85, 122, 140, 0.1));
     top: 35%; left: 25%;
     animation: drift3 13s ease-in-out infinite;
   }
@@ -134,20 +134,20 @@ const styles = `
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: rgba(255,92,26,0.09);
-    border: 1px solid rgba(255,92,26,0.18);
+    background: rgba(85, 122, 140, 0.09);
+    border: 1px solid rgba(85, 122, 140, 0.18);
     border-radius: 100px;
     padding: 6px 14px;
     font-size: 12px;
     font-weight: 500;
-    color: #FF5C1A;
+    color: #557a8c;
     margin-bottom: 22px;
     animation: fadeUp 0.5s ease both;
   }
 
   .qa-badge-dot {
     width: 6px; height: 6px;
-    background: #FF5C1A;
+    background: #557a8c;
     border-radius: 50%;
     animation: pulse 2s infinite;
   }
@@ -165,14 +165,14 @@ const styles = `
   }
 
   .qa-h1-accent {
-    background: linear-gradient(135deg, #FF5C1A 0%, #FF9A6C 100%);
+    background: linear-gradient(135deg, #557a8c 0%, #7090a0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .qa-sub {
-    color: #888;
+    color: #557a8c;
     font-size: 15px;
     margin-bottom: 36px;
     animation: fadeUp 0.5s 0.16s ease both;
@@ -193,8 +193,8 @@ const styles = `
     text-align: left;
   }
   .qa-search-wrap.focused {
-    border-color: #FF5C1A;
-    box-shadow: 0 10px 44px rgba(255,92,26,0.14), 0 0 0 3px rgba(255,92,26,0.1);
+    border-color: #557a8c;
+    box-shadow: 0 10px 44px rgba(85, 122, 140, 0.14), 0 0 0 3px rgba(85, 122, 140, 0.1);
   }
 
   .qa-textarea {
@@ -227,10 +227,10 @@ const styles = `
     background: transparent;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    color: #888;
+    color: #557a8c;
     transition: all 0.2s;
   }
-  .qa-icon-btn:hover { background: #F4F6FA; color: #FF5C1A; border-color: #FF8C42; }
+  .qa-icon-btn:hover { background: #eef1f8; color: #557a8c; border-color: #557a8c; }
   .qa-icon-btn svg { width: 15px; height: 15px; }
 
   .qa-hint { font-size: 12px; color: #aaa; }
@@ -245,7 +245,7 @@ const styles = `
     transition: all 0.22s;
     flex-shrink: 0;
   }
-  .qa-send:hover { background: #FF5C1A; transform: scale(1.06); }
+  .qa-send:hover { background: #557a8c; transform: scale(1.06); }
   .qa-send svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* CHIPS */
@@ -273,8 +273,8 @@ const styles = `
     font-family: 'DM Sans', sans-serif;
   }
   .qa-chip:hover {
-    border-color: #FF5C1A;
-    color: #FF5C1A;
+    border-color: #557a8c;
+    color: #557a8c;
     background: #fff;
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
@@ -291,7 +291,7 @@ const styles = `
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #888;
+    color: #557a8c;
     margin-bottom: 16px;
   }
 
@@ -318,13 +318,13 @@ const styles = `
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,92,26,0.04), transparent 60%);
+    background: linear-gradient(135deg, rgba(85, 122, 140, 0.06), transparent 60%);
     opacity: 0;
     transition: opacity 0.3s;
     border-radius: inherit;
   }
   .qa-card:hover {
-    border-color: #FF8C42;
+    border-color: #557a8c;
     transform: translateY(-4px);
     box-shadow: 0 14px 44px rgba(0,0,0,0.08);
   }
@@ -352,7 +352,7 @@ const styles = `
 
   .qa-card-desc {
     font-size: 12.5px;
-    color: #888;
+    color: #557a8c;
     line-height: 1.55;
     position: relative; z-index: 1;
   }
@@ -361,9 +361,9 @@ const styles = `
     display: inline-block;
     margin-top: 11px;
     font-size: 11px;
-    color: #FF5C1A;
+    color: #557a8c;
     font-weight: 500;
-    background: rgba(255,92,26,0.08);
+    background: rgba(85, 122, 140, 0.08);
     padding: 3px 9px;
     border-radius: 100px;
     position: relative; z-index: 1;
@@ -382,7 +382,7 @@ const styles = `
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: #888;
+    color: #557a8c;
     margin-bottom: 11px;
   }
 
@@ -402,7 +402,7 @@ const styles = `
     transition: all 0.2s;
     font-family: 'DM Sans', sans-serif;
   }
-  .qa-recent-item:hover { border-color: #FF8C42; color: #1a1a1a; background: #fff; }
+  .qa-recent-item:hover { border-color: #557a8c; color: #1a1a1a; background: #fff; }
   .qa-recent-item svg { width: 14px; height: 14px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
   @media (max-width: 720px) {
@@ -415,6 +415,20 @@ const styles = `
     .qa-grid { grid-template-columns: 1fr; }
     .qa-chips { gap: 7px; }
   }
+
+  /* CHAT INTERFACE */
+  .qa-chat-layout { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative; }
+  .qa-chat-messages { flex: 1; overflow-y: auto; padding: 20px 40px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
+  .qa-message-row { display: flex; gap: 16px; max-width: 800px; margin: 0 auto; width: 100%; animation: fadeUp 0.3s ease both; }
+  .qa-message-row.user { justify-content: flex-end; }
+  .qa-avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .qa-avatar.ai { background: #557a8c; color: white; }
+  .qa-avatar.user { background: #333; color: white; order: 2; }
+  .qa-message-bubble { background: white; padding: 16px 20px; border-radius: 16px; font-size: 15px; line-height: 1.6; color: #1a1a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f0f0f0; max-width: 80%; white-space: pre-wrap; }
+  .qa-message-row.user .qa-message-bubble { background: #557a8c; color: white; border-color: #557a8c; border-bottom-right-radius: 4px; }
+  .qa-message-row.ai .qa-message-bubble { border-bottom-left-radius: 4px; }
+  .qa-chat-input-container { padding: 20px 40px; background: linear-gradient(to top, #F4F6FA 80%, rgba(244,246,250,0)); position: sticky; bottom: 0; z-index: 10; }
+  .qa-typing-dot { width: 6px; height: 6px; background: #ccc; border-radius: 50%; animation: pulse 1s infinite; }
 `;
 
 const NavIcon = ({ active, title, children, onClick }) => (
@@ -464,10 +478,18 @@ const navItems = [
 
 export default function QuickArtAI() {
   const [prompt, setPrompt] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [activeNav, setActiveNav] = useState("chat");
-  const [sent, setSent] = useState(false);
   const navigate = useNavigate();
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => { scrollToBottom(); }, [messages, loading]);
 
   const handleChip = (label) => {
     setPrompt(label);
@@ -479,10 +501,38 @@ export default function QuickArtAI() {
     setFocused(true);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!prompt.trim()) return;
-    setSent(true);
-    setTimeout(() => setSent(false), 600);
+    
+    const userMsg = { role: "user", content: prompt };
+    setMessages(prev => [...prev, userMsg]);
+    setPrompt("");
+    setLoading(true);
+
+    try {
+        const response = await fetch('http://localhost:8080/api/ai/chat', { //Make sure this is the correct URL
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userMsg.content })
+        });
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        
+        let replyText = "I'm sorry, I couldn't process that.";
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            replyText = data.reply || data.message || JSON.stringify(data);
+        } else {
+            replyText = await response.text();
+        }
+
+        const aiMsg = { role: "ai", content: replyText };
+        setMessages(prev => [...prev, aiMsg]);
+    } catch (error) {
+        console.error("Error communicating with AI assistant:", error);
+        setMessages(prev => [...prev, { role: "ai", content: `Connection error: ${error.message}. Please check if the backend is running on port 8080 and CORS is enabled.` }]);
+    }
+    setLoading(false);
   };
 
   const handleKeyDown = (e) => {
@@ -511,8 +561,11 @@ export default function QuickArtAI() {
 
         {/* MAIN */}
         <main className="qa-main">
-          {/* HERO */}
-          <section className="qa-hero">
+          
+          {messages.length === 0 ? (
+            <>
+            {/* HERO */}
+            <section className="qa-hero">
             <div className="qa-blobs">
               <div className="qa-blob qa-blob-1" />
               <div className="qa-blob qa-blob-2" />
@@ -574,7 +627,7 @@ export default function QuickArtAI() {
                       className="qa-send"
                       onClick={handleSend}
                       aria-label="Send"
-                      style={sent ? { background: "#FF5C1A", transform: "scale(0.92)" } : {}}
+                      style={loading ? { background: "#557a8c", opacity: 0.8, pointerEvents: "none" } : {}}
                     >
                       <svg viewBox="0 0 24 24">
                         <line x1="22" y1="2" x2="11" y2="13"/>
@@ -631,6 +684,58 @@ export default function QuickArtAI() {
               ))}
             </div>
           </div>
+            </>
+          ) : (
+            /* CHAT INTERFACE */
+            <div className="qa-chat-layout">
+              <div className="qa-chat-messages">
+                <div style={{ textAlign: "center", marginBottom: 20, opacity: 0.5, fontSize: 13 }}>
+                  AI Assistant connected • {new Date().toLocaleDateString()}
+                </div>
+                {messages.map((msg, i) => (
+                  <div key={i} className={`qa-message-row ${msg.role}`}>
+                    <div className={`qa-avatar ${msg.role}`}>{msg.role === 'ai' ? 'AI' : 'U'}</div>
+                    <div className="qa-message-bubble">{msg.content}</div>
+                  </div>
+                ))}
+                {loading && (
+                  <div className="qa-message-row ai">
+                    <div className="qa-avatar ai">AI</div>
+                    <div className="qa-message-bubble" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                      <div className="qa-typing-dot" style={{ animationDelay: '0s' }}/>
+                      <div className="qa-typing-dot" style={{ animationDelay: '0.2s' }}/>
+                      <div className="qa-typing-dot" style={{ animationDelay: '0.4s' }}/>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div className="qa-chat-input-container">
+                <div className={`qa-search-wrap${focused ? " focused" : ""}`} style={{ marginBottom: 0 }}>
+                  <textarea
+                    className="qa-textarea"
+                    rows={1}
+                    placeholder="Ask a follow up..."
+                    value={prompt}
+                    onChange={e => setPrompt(e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    onKeyDown={handleKeyDown}
+                    autoFocus
+                  />
+                  <div className="qa-search-row">
+                    <div className="qa-search-left">
+                      {/* Icons can be reused here if needed */}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <button className="qa-send" onClick={handleSend} disabled={loading} style={loading ? { background: "#ccc" } : {}}><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </>

@@ -12,9 +12,19 @@ export default function AdminCategories() {
     const id = newCategory.toLowerCase().replace(/\s+/g, "-");
     const categoryObj = { id, label: newCategory, icon: "🏷️", color: "#64748b", sub: [] };
 
-    setCategories(prev => [...prev, categoryObj]);
-    setNewCategory("");
-    notify("Category added locally!");
+    try {
+      const response = await fetch('http://localhost:8080/api/categories', { //Make sure this is the correct URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(categoryObj)
+      });
+      if (response.ok) {
+        const savedCategory = await response.json();
+        setCategories(prev => [...prev, savedCategory]);
+        setNewCategory("");
+        notify("Category added successfully!");
+      }
+    } catch (error) { notify("Failed to add category.", "error"); }
   };
 
   return (

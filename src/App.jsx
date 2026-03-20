@@ -31,29 +31,33 @@ import BrandStorePage from './assets/BrandStorePage.jsx';
 import InfoPage from './assets/InfoPage.jsx';
 
 const CATEGORIES = [
-  { id: "electronics", label: "Electronics", icon: "💻", color: "#4F8EF7", sub: ["Laptops", "Phones", "Accessories"] },
-  { id: "fashion", label: "Fashion", icon: "👗", color: "#E879A0", sub: ["Tops", "Dresses", "Jeans"] },
-  { id: "wearables", label: "Wearables", icon: "⌚", color: "#A855F7", sub: ["Smartwatches", "Fitness Trackers"] },
-  { id: "photography", label: "Photography", icon: "📷", color: "#F59E0B", sub: ["Cameras", "Lenses", "Drones"] },
-  { id: "audio", label: "Audio", icon: "🎧", color: "#10B981", sub: ["Headphones", "Speakers"] },
-  { id: "sports", label: "Sports", icon: "🏋️", color: "#EF4444", sub: ["Fitness", "Outdoors"] },
-  { id: "home-living", label: "Home & Living", icon: "🏠", color: "#6366F1", sub: ["Furniture", "Decor"] },
-  { id: "books", label: "Books", icon: "📚", color: "#8B5CF6", sub: ["Fiction", "Non-Fiction"] },
-  { id: "beauty", label: "Beauty", icon: "💎", color: "#EC4899", sub: ["Skincare", "Makeup"] },
-  { id: "automotive", label: "Automotive", icon: "🚗", color: "#F97316", sub: ["Parts", "Tools"] },
-  { id: "gaming", label: "Gaming", icon: "🎮", color: "#06B6D4", sub: ["Consoles", "Games"] },
-  { id: "smart-home", label: "Smart Home", icon: "📺", color: "#84CC16", sub: ["Lighting", "Security"] },
+  { id: "fashion", label: "Fashion", icon: "👕", color: "#557a8c", sub: ["Men's Shirts", "Women's Dresses"] },
+  { id: "electronics", label: "Electronics", icon: "📱", color: "#557a8c", sub: ["Mobile Phones", "Laptops"] },
+  { id: "home-living", label: "Home & Living", icon: "🏠", color: "#557a8c", sub: ["Sofas", "Beds"] },
+  { id: "beauty-personal", label: "Beauty", icon: "🧴", color: "#557a8c", sub: ["Skincare", "Makeup"] },
+  { id: "sports-fitness", label: "Sports", icon: "⚽", color: "#557a8c", sub: ["Gym Equipment", "Sportswear"] },
+  { id: "gaming", label: "Gaming", icon: "🎮", color: "#557a8c", sub: ["Consoles", "Games"] },
+  { id: "books-education", label: "Books", icon: "📚", color: "#557a8c", sub: ["Novels", "Stationery"] },
+  { id: "automotive", label: "Automotive", icon: "🚗", color: "#557a8c", sub: ["Car Accessories", "Engine Oil"] },
+  { id: "groceries", label: "Groceries", icon: "🥗", color: "#557a8c", sub: ["Fruits & Vegetables", "Snacks"] },
+  { id: "pets", label: "Pets", icon: "🐶", color: "#557a8c", sub: ["Pet Food", "Pet Toys"] },
+  { id: "travel-lifestyle", label: "Travel", icon: "🧳", color: "#557a8c", sub: ["Bags & Luggage", "Sunglasses"] },
+  { id: "health-medical", label: "Health", icon: "🏥", color: "#557a8c", sub: ["Supplements", "First Aid"] },
 ];
 
 const PRODUCTS = [
-  { id: 1, name: "Wireless Earbuds Pro", category: "audio", price: 24500, orig: 29900, rating: 4.5, reviews: 128, badge: "Best Seller", color: "#10B981", emoji: "🎧", imgs: ["/images/product-earbuds.jpg"], colors: ["#000", "#fff"], specs: ["Bluetooth 5.2", "ANC"], sub: "Headphones" },
-  { id: 2, name: "Smart Watch Elite", category: "wearables", price: 61000, orig: 75000, rating: 4.3, reviews: 87, badge: "New", color: "#A855F7", emoji: "⌚", imgs: ["/images/product-watch.jpg"], colors: ["#333", "#eee"], specs: ["GPS", "Heart Rate"], sub: "Smartwatches" },
-  { id: 3, name: "Camera Lens 85mm", category: "photography", price: 137500, orig: 150000, rating: 4.7, reviews: 45, badge: "Premium", color: "#F59E0B", emoji: "📷", imgs: ["/images/product-lens.jpg"], colors: ["#000"], specs: ["F1.8 Aperture"], sub: "Lenses" },
-  { id: 4, name: "Gaming Laptop X15", category: "electronics", price: 289000, orig: 320000, rating: 4.8, reviews: 213, badge: "Hot", color: "#EF4444", emoji: "💻", imgs: ["/images/product-laptop.jpg"], colors: ["#111", "#555"], specs: ["16GB RAM", "RTX 4070"], sub: "Laptops" },
-  { id: 5, name: "Air Purifier Pro", category: "home-living", price: 45000, orig: 52000, rating: 4.4, reviews: 67, badge: "Eco", color: "#10B981", emoji: "🌬️", imgs: ["/images/product-purifier.jpg"], colors: ["#fff"], specs: ["HEPA Filter"], sub: "Decor" },
-  { id: 6, name: "Running Shoes Max", category: "sports", price: 18500, orig: 22000, rating: 4.6, reviews: 302, badge: "Trending", color: "#F97316", emoji: "👟", imgs: ["/images/product-shoes.jpg"], colors: ["#f00", "#00f", "#0f0"], specs: ["Lightweight", "Breathable"], sub: "Fitness" },
-  { id: 7, name: "4K OLED Smart TV", category: "smart-home", price: 185000, orig: 210000, rating: 4.9, reviews: 156, badge: "Editor's Pick", color: "#06B6D4", emoji: "📺", imgs: ["/images/product-tv.jpg"], colors: ["#222"], specs: ["65-inch", "Dolby Vision"], sub: "Lighting" },
-  { id: 8, name: "Mechanical Keyboard", category: "electronics", price: 22000, orig: 25000, rating: 4.5, reviews: 89, badge: "Popular", color: "#6366F1", emoji: "⌨️", imgs: ["/images/product-keyboard.jpg"], colors: ["#fff", "#000"], specs: ["RGB Backlight", "Blue Switches"], sub: "Accessories" },
+  { id: 1, name: "Men's Casual Shirt", category: "fashion", price: 4500, orig: 5500, rating: 4.6, reviews: 150, badge: "New", color: "#557a8c", emoji: "👕", imgs: ["https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=300&q=80"], specs: ["Cotton", "Slim Fit"], sub: "Men's Casual Shirts" },
+  { id: 2, name: "Latest Smartphone Pro", category: "electronics", price: 215000, orig: 240000, rating: 4.9, reviews: 540, badge: "Hot", color: "#557a8c", emoji: "📱", imgs: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80"], specs: ["256GB", "OLED Display"], sub: "Mobile Phones" },
+  { id: 3, name: "Modern Velvet Sofa", category: "home-living", price: 125000, orig: 150000, rating: 4.7, reviews: 95, badge: "Top Rated", color: "#557a8c", emoji: "🛋️", imgs: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&q=80"], specs: ["3-Seater", "Green Velvet"], sub: "Sofas" },
+  { id: 4, name: "Organic Face Cream", category: "beauty-personal", price: 3500, orig: 4000, rating: 4.9, reviews: 320, badge: "Organic", color: "#557a8c", emoji: "🧴", imgs: ["https://images.unsplash.com/photo-1556228552-6c3638d6e388?auto=format&fit=crop&w=300&q=80"], specs: ["50ml", "Anti-aging"], sub: "Face Wash & Creams" },
+  { id: 5, name: "Professional Dumbbell Set", category: "sports-fitness", price: 25000, orig: 30000, rating: 4.7, reviews: 112, badge: "Pro Choice", color: "#557a8c", emoji: "🏋️", imgs: ["https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=300&q=80"], specs: ["20kg Set", "Adjustable"], sub: "Gym Equipment" },
+  { id: 6, name: "Next-Gen Gaming Console", category: "gaming", price: 150000, orig: 165000, rating: 4.9, reviews: 850, badge: "Best Seller", color: "#557a8c", emoji: "🎮", imgs: ["https://images.unsplash.com/photo-1486401899868-0e435ed85128?auto=format&fit=crop&w=300&q=80"], specs: ["8K Output", "1TB SSD"], sub: "Consoles" },
+  { id: 7, name: "The Great Gatsby Novel", category: "books-education", price: 1200, orig: 1500, rating: 4.8, reviews: 1205, badge: "Classic", color: "#557a8c", emoji: "📚", imgs: ["https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=300&q=80"], specs: ["Hardcover", "F. Scott Fitzgerald"], sub: "Novels" },
+  { id: 8, name: "Leather Car Seat Covers", category: "automotive", price: 18000, orig: 22000, rating: 4.5, reviews: 88, badge: "Premium", color: "#557a8c", emoji: "🚗", imgs: ["https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=300&q=80"], specs: ["Universal Fit", "PU Leather"], sub: "Car Accessories" },
+  { id: 9, name: "Fresh Organic Vegetables", category: "groceries", price: 1500, orig: 1800, rating: 4.9, reviews: 450, badge: "Fresh", color: "#557a8c", emoji: "🥗", imgs: ["https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=300&q=80"], specs: ["1kg Box", "Farm Fresh"], sub: "Fruits & Vegetables" },
+  { id: 10, name: "Premium Dog Food", category: "pets", price: 8500, orig: 9000, rating: 4.8, reviews: 215, badge: "Vet Approved", color: "#557a8c", emoji: "🐶", imgs: ["https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=300&q=80"], specs: ["10kg Bag", "For Adult Dogs"], sub: "Pet Food" },
+  { id: 11, name: "Leather Travel Duffle Bag", category: "travel-lifestyle", price: 22000, orig: 25000, rating: 4.7, reviews: 130, badge: "Handmade", color: "#557a8c", emoji: "🧳", imgs: ["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=300&q=80"], specs: ["Genuine Leather", "Cabin Size"], sub: "Bags & Luggage" },
+  { id: 12, name: "Vitamin C Supplements", category: "health-medical", price: 2500, orig: 3000, rating: 4.9, reviews: 650, badge: "Essential", color: "#557a8c", emoji: "💊", imgs: ["https://images.unsplash.com/photo-1511688878353-3a2f5be94c54?auto=format&fit=crop&w=300&q=80"], specs: ["1000mg", "90 Tablets"], sub: "Supplements" },
 ];
 
 const MainLayout = () => (

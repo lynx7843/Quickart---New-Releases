@@ -425,6 +425,33 @@ function MiniBarChart({ data, color }) {
   );
 }
 
+function AdminLogin({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async () => {
+    const success = await onLogin(email, password);
+    if (!success) {
+      setError('Invalid admin credentials or not an admin user.');
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: '#F8F8F8' }}>
+      <div style={{ background: 'white', padding: 40, borderRadius: 16, width: 400, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+        <h2 style={{ marginBottom: 20, textAlign: 'center' }}>Admin Login</h2>
+        {error && <p style={{ color: 'red', fontSize: 14, textAlign: 'center', marginBottom: 10 }}>{error}</p>}
+        <input placeholder="Admin Email" value={email} onChange={e => setEmail(e.target.value)} style={{ width: '100%', padding: 12, marginBottom: 10, borderRadius: 8, border: '1px solid #ddd' }} />
+        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} style={{ width: '100%', padding: 12, marginBottom: 20, borderRadius: 8, border: '1px solid #ddd' }} />
+        <button onClick={handleLogin} style={{ width: '100%', padding: 12, background: '#F97316', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>
+          Login
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPanel() {
   const [activeNav, setActiveNav] = useState("dashboard");
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -433,20 +460,44 @@ export default function AdminPanel() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
-  const [categories, setCategories] = useState(MOCK_CATEGORIES);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [connectionError, setConnectionError] = useState(false);
-  const { user } = useAuth();
+  const { user, login } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(user?.role === 'ADMIN');
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    // No backend fetch needed for frontend-only version
-    console.log("Data refreshed locally");
+    try {
+      const productsRes = await fetch('http://localhost:8080/api/products');
+      const categoriesRes = await fetch('http://localhost:8080/api/categories');
+      if (productsRes.ok && categoriesRes.ok) {
+        setProducts(await productsRes.json());
+        setCategories(await categoriesRes.json());
+        setConnectionError(false);
+      } else {
+        throw new Error('Failed to fetch data');
+      }
+    } catch (error) {
+      console.error("Backend connection error:", error);
+      setConnectionError(true);
+    }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [user]); // Re-fetch when user/auth state changes
+    if (isAdmin) {
+      fetchData();
+    }
+  }, [isAdmin]);
+
+  const handleAdminLogin = async (email, password) => {
+    const loggedInUser = await login(email, password);
+    if (loggedInUser && loggedInUser.role === 'ADMIN') {
+      setIsAdmin(true);
+      return true;
+    }
+    return false;
+  };
 
   const notify = (msg, type = "success") => {
     if (type === 'error') console.error(msg);
@@ -463,6 +514,10 @@ export default function AdminPanel() {
   const selectAll = () => setSelectedProducts(filteredProducts.length === selectedProducts.length ? [] : filteredProducts.map(p => p.id));
 
   const SIDEBAR_W = sidebarCollapsed ? 72 : 220;
+
+  if (!isAdmin) {
+    return <AdminLogin onLogin={handleAdminLogin} />;
+  }
 
   return (
     <div style={{ display: "flex", fontFamily: "'Sora', 'DM Sans', sans-serif", background: "#F8F8F8", paddingTop: '60px' }}>
@@ -568,9 +623,23 @@ export default function AdminPanel() {
       {showAddProduct && (
         <AddProductPanel
           onClose={() => setShowAddProduct(false)}
-          onAdd={async (p) => { 
-            setProducts(prev => [...prev, { ...p, id: Date.now() }]);
-            notify("Product published locally!");
+          onAdd={async (p) => {
+            try {
+              const response = await fetch('http://localhost:8080/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(p),
+              });
+              if (response.ok) {
+                const newProduct = await response.json();
+                setProducts(prev => [...prev, newProduct]);
+                notify("Product published successfully!");
+              } else {
+                notify("Failed to publish product.", "error");
+              }
+            } catch (error) {
+              notify("Error connecting to backend.", "error");
+            }
           }}
           categories={categories}
         />
@@ -578,9 +647,18 @@ export default function AdminPanel() {
       {showAddCategory && (
         <AddCategoryModal
           onClose={() => setShowAddCategory(false)}
-          onAdd={async (c) => { 
-            setCategories(prev => [...prev, c]);
-            notify("Category created locally!");
+          onAdd={async (c) => {
+            // Similar fetch logic for adding a category
+            const response = await fetch('http://localhost:8080/api/categories', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(c),
+            });
+            if (response.ok) {
+              const newCategory = await response.json();
+              setCategories(prev => [...prev, newCategory]);
+              notify("Category created successfully!");
+            }
           }} categories={categories}
         />
       )}
