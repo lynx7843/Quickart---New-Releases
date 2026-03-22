@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Camera, Upload, CheckCircle2, AlertCircle, Sparkles, Ruler, RefreshCw, Shirt, Video, X, Zap, Download } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Camera, Upload, CheckCircle2, AlertCircle, Sparkles, Ruler, RefreshCw, Shirt, Video, X, Zap, Download, Grid } from 'lucide-react';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;700&display=swap');
@@ -277,6 +278,16 @@ const styles = `
 const BACKEND_URL = "http://localhost:8080/api/v1/tryon"; //Make sure this is the correct URL
 
 export default function VirtualFittingRoom() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if we have an image passed from the gallery
+  useEffect(() => {
+    if (location.state && location.state.clothImage) {
+      setClothImage(location.state.clothImage);
+    }
+  }, [location.state]);
+
   const [userImage, setUserImage]       = useState(null);
   const [clothImage, setClothImage]     = useState(null);
   const [selectedSize, setSelectedSize] = useState('M');
@@ -413,7 +424,7 @@ export default function VirtualFittingRoom() {
         <header className="vfr-header">
           <div>
             <h1 className="vfr-h1">
-              <Sparkles className="text-[#557a8c]" size={32} /> QuickArt Virtusl Mirror
+              <Sparkles className="text-[#557a8c]" size={32} /> QuickArt Virtual Mirror
             </h1>
             <p className="vfr-header-p">Experience clothes on you instantly with our Gen-AI engine.</p>
           </div>
@@ -502,11 +513,15 @@ export default function VirtualFittingRoom() {
                     </div>
                   </>
                 ) : (
-                  <label className="vfr-upload-placeholder-sm" style={{ cursor: 'pointer' }}>
-                    <Upload style={{ color: '#cbd5e1', marginBottom: '0.5rem' }} />
-                    <span>Upload Clothing Item</span>
-                    <input type="file" style={{ display: 'none' }} accept="image/*" onChange={(e) => handleImageUpload(e, setClothImage)} />
-                  </label>
+                  <div 
+                    className="vfr-upload-placeholder-sm" 
+                    style={{ cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+                    onClick={() => navigate('/cloth-gallery')}
+                  >
+                    <Grid size={32} style={{ color: '#cbd5e1', marginBottom: '0.75rem' }} />
+                    <span style={{ fontWeight: 600, color: '#557a8c' }}>Open Cloth Gallery</span>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: 4 }}>Select from 100+ items or Upload</span>
+                  </div>
                 )}
               </div>
             </div>

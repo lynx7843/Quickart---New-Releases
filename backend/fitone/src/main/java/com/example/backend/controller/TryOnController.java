@@ -1,19 +1,15 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.TryOnRequest;
-import com.example.backend.dto.TryOnResponse;
+import com.example.backend.model.TryOnRequest;
+import com.example.backend.model.TryOnResponse;
 import com.example.backend.service.TryOnService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/v1/tryon")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
+@CrossOrigin(origins = "http://localhost:5173")
 public class TryOnController {
 
     private final TryOnService tryOnService;
@@ -22,10 +18,16 @@ public class TryOnController {
         this.tryOnService = tryOnService;
     }
 
+    /**
+     * @param request  JSON body with userImageBase64, clothImageBase64, selectedSize
+     * @return         JSON body with generatedImageBase64, fitMatch, fitReason, fitScore
+     */
     @PostMapping("/fit")
     public ResponseEntity<TryOnResponse> fit(@RequestBody TryOnRequest request) {
-        return ResponseEntity.ok(tryOnService.process(request));
+        TryOnResponse response = tryOnService.process(request);
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/health")
     public ResponseEntity<String> health() {
