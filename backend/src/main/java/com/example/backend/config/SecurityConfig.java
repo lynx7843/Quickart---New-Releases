@@ -41,28 +41,31 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints - no token needed
+                        // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/search").permitAll()
                         .requestMatchers("/api/v1/tryon/**").permitAll()
+                        .requestMatchers("/api/v1/debug/**").permitAll()
                         .requestMatchers("/api/v1/gemini/**").permitAll()
 
-                        // Cart - any authenticated user
+                        // ✅ Upload signature — authenticated users only
+                        .requestMatchers("/api/v1/upload/**").authenticated()
+
+                        // Cart
                         .requestMatchers("/api/v1/cart/**").authenticated()
 
-                        // Orders - any authenticated user
+                        // Orders
                         .requestMatchers("/api/v1/orders/**").authenticated()
 
-                        // Product management - SELLER or ADMIN only
+                        // Product management
                         .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyRole("SELLER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasAnyRole("SELLER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasAnyRole("SELLER", "ADMIN")
 
-                        // Admin endpoints - ADMIN only
+                        // Admin only
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
-                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

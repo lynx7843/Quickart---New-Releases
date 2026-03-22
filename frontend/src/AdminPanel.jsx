@@ -186,7 +186,7 @@ function AddProductPanel({ onClose, onAdd, categories }) {
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1);
-  const inputRef = useRef();
+  const [isUploading, setIsUploading] = useState(false);
 
   const validate = () => {
     const e = {};
@@ -200,10 +200,65 @@ function AddProductPanel({ onClose, onAdd, categories }) {
   const handleSubmit = () => {
     if (!validate()) return;
     const cat = categories.find(c => c.label === form.category);
-    onAdd({ ...form, id: Date.now(), price: +form.price, stock: +form.stock, category: cat?.id || "", rating: 0, reviews: 0, orig: +form.price*1.2, badge: "NEW", color: cat?.color || "#557a8c", emoji: cat?.icon || "📦", imgs: [images[0]?.url || "https://via.placeholder.com/150"], colors: ["#000"], specs: ["New"], sub: form.type });
+    onAdd({ ...form, id: Date.now(), price: +form.price, stock: +form.stock, category: cat?.id || "", rating: 0, reviews: 0, orig: +form.price*1.2, badge: "NEW", color: cat?.color || "#557a8c", emoji: cat?.icon || "📦", imgs: images.length > 0 ? [images[0].url] : ["https://via.placeholder.com/150"], colors: ["#000"], specs: ["New"], sub: form.type });
     onClose();
   };
 
+  const handleImageUpload = async (file) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // Handle missing token, e.g., redirect to login
+      console.error("No auth token found. Please log in.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/upload/image", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error("Image upload error:", error);
+      // Optionally, show an error message to the user
+      return null;
+    }
+  };
+
+  const onFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setIsUploading(true);
+    const newImages = [];
+
+    for (const file of files) {
+      const url = await handleImageUpload(file);
+      if (url) {
+        newImages.push({
+          id: Math.random().toString(36).slice(2),
+          url: url,
+          name: file.name,
+        });
+      }
+    }
+
+    setImages((p) => [...p, ...newImages]);
+    setIsUploading(false);
+  };
+  
   const Field = ({ label, name, type="text", placeholder, options, required }) => (
     <div style={{ marginBottom: 16 }}>
       <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: C.textMid, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>
@@ -270,11 +325,11 @@ function AddProductPanel({ onClose, onAdd, categories }) {
             </div>}
           </>}
           {step===3 && <>
-            <div style={{ border:`2px dashed ${C.border}`, borderRadius:14, padding:"32px 20px", textAlign:"center", cursor:"pointer", background:C.bg }} onClick={()=>inputRef.current.click()}>
+            <div style={{ border:`2px dashed ${C.border}`, borderRadius:14, padding:"32px 20px", textAlign:"center", cursor:"pointer", background:C.bg }} onClick={()=>!isUploading && inputRef.current.click()}>
               <div style={{ fontSize:36, marginBottom:8 }}>🖼️</div>
-              <div style={{ fontWeight:700, color:C.text, marginBottom:4 }}>Drop images here or click to upload</div>
+              <div style={{ fontWeight:700, color:C.text, marginBottom:4 }}>{isUploading ? "Uploading..." : "Drop images here or click to upload"}</div>
               <div style={{ fontSize:12, color:C.textMuted }}>PNG, JPG, WEBP up to 10MB</div>
-              <input ref={inputRef} type="file" multiple accept="image/*" style={{ display:"none" }} onChange={e=>{ const files=Array.from(e.target.files); setImages(p=>[...p,...files.map(f=>({id:Math.random().toString(36).slice(2),url:URL.createObjectURL(f),name:f.name}))]); }}/>
+              <input ref={inputRef} type="file" multiple accept="image/*" style={{ display:"none" }} onChange={onFileChange} disabled={isUploading}/>
             </div>
             {images.length>0 && <div style={{ display:"flex", gap:10, marginTop:12, flexWrap:"wrap" }}>
               {images.map((img,i)=>(
@@ -298,7 +353,7 @@ function AddProductPanel({ onClose, onAdd, categories }) {
             {step<3 ? (
               <button onClick={()=>setStep(s=>s+1)} style={{ padding:"10px 24px", borderRadius:10, border:"none", background:`linear-gradient(135deg,${C.deep},${C.deepLight})`, color:"#fff", cursor:"pointer", fontWeight:700, fontSize:13 }}>Continue →</button>
             ) : (
-              <button onClick={handleSubmit} style={{ padding:"10px 24px", borderRadius:10, border:"none", background:`linear-gradient(135deg,${C.deep},${C.deepLight})`, color:"#fff", cursor:"pointer", fontWeight:700, fontSize:13 }}>🚀 Publish</button>
+              <button onClick={handleSubmit} disabled={isUploading} style={{ padding:"10px 24px", borderRadius:10, border:"none", background:isUploading?C.mid:`linear-gradient(135deg,${C.deep},${C.deepLight})`, color:"#fff", cursor:isUploading?"not-allowed":"pointer", fontWeight:700, fontSize:13 }}>{isUploading ? "Uploading..." : "🚀 Publish"}</button>
             )}
           </div>
         </div>

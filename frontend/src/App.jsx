@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import QuickArt from './QuickArt.jsx';
 import FirstNavbar from "./assets/firstnavbar";
@@ -21,7 +21,7 @@ import AdminPanel from './AdminPanel.jsx';
 import AdminDashboard from './AdminDashboard.jsx';
 import AdminProducts from './AdminProducts.jsx';
 import AdminCategories from './AdminCategories.jsx';
-import SellerDashboard from './SellerDashboard.jsx';   // ← NEW
+import SellerDashboard from './SellerDashboard.jsx';
 import { AuthProvider } from './AuthContext.jsx';
 import { CartProvider } from './pages/CartContext.jsx';
 import CartPage from './assets/addtocart.jsx';
@@ -36,18 +36,18 @@ import BrandStorePage from './assets/BrandStorePage.jsx';
 import InfoPage from './assets/InfoPage.jsx';
 
 const CATEGORIES = [
-  { id: "fashion",        label: "Fashion",    icon: "👕", color: "#557a8c", sub: ["Men's Shirts", "Women's Dresses"] },
-  { id: "electronics",   label: "Electronics",icon: "📱", color: "#557a8c", sub: ["Mobile Phones", "Laptops"] },
-  { id: "home-living",   label: "Home & Living",icon:"🏠", color: "#557a8c", sub: ["Sofas", "Beds"] },
-  { id: "beauty-personal",label:"Beauty",      icon: "🧴", color: "#557a8c", sub: ["Skincare", "Makeup"] },
-  { id: "sports-fitness",label: "Sports",      icon: "⚽", color: "#557a8c", sub: ["Gym Equipment", "Sportswear"] },
-  { id: "gaming",        label: "Gaming",      icon: "🎮", color: "#557a8c", sub: ["Consoles", "Games"] },
-  { id: "books-education",label:"Books",       icon: "📚", color: "#557a8c", sub: ["Novels", "Stationery"] },
-  { id: "automotive",    label: "Automotive",  icon: "🚗", color: "#557a8c", sub: ["Car Accessories", "Engine Oil"] },
-  { id: "groceries",     label: "Groceries",   icon: "🥗", color: "#557a8c", sub: ["Fruits & Vegetables", "Snacks"] },
-  { id: "pets",          label: "Pets",        icon: "🐶", color: "#557a8c", sub: ["Pet Food", "Pet Toys"] },
-  { id: "travel-lifestyle",label:"Travel",     icon: "🧳", color: "#557a8c", sub: ["Bags & Luggage", "Sunglasses"] },
-  { id: "health-medical",label: "Health",      icon: "🏥", color: "#557a8c", sub: ["Supplements", "First Aid"] },
+  { id: "fashion",         label: "Fashion",       icon: "👕", color: "#557a8c", sub: ["Men's Shirts", "Women's Dresses"] },
+  { id: "electronics",    label: "Electronics",   icon: "📱", color: "#557a8c", sub: ["Mobile Phones", "Laptops"] },
+  { id: "home-living",    label: "Home & Living", icon: "🏠", color: "#557a8c", sub: ["Sofas", "Beds"] },
+  { id: "beauty-personal",label: "Beauty",        icon: "🧴", color: "#557a8c", sub: ["Skincare", "Makeup"] },
+  { id: "sports-fitness", label: "Sports",        icon: "⚽", color: "#557a8c", sub: ["Gym Equipment", "Sportswear"] },
+  { id: "gaming",         label: "Gaming",        icon: "🎮", color: "#557a8c", sub: ["Consoles", "Games"] },
+  { id: "books-education",label: "Books",         icon: "📚", color: "#557a8c", sub: ["Novels", "Stationery"] },
+  { id: "automotive",     label: "Automotive",    icon: "🚗", color: "#557a8c", sub: ["Car Accessories", "Engine Oil"] },
+  { id: "groceries",      label: "Groceries",     icon: "🥗", color: "#557a8c", sub: ["Fruits & Vegetables", "Snacks"] },
+  { id: "pets",           label: "Pets",          icon: "🐶", color: "#557a8c", sub: ["Pet Food", "Pet Toys"] },
+  { id: "travel-lifestyle",label:"Travel",        icon: "🧳", color: "#557a8c", sub: ["Bags & Luggage", "Sunglasses"] },
+  { id: "health-medical", label: "Health",        icon: "🏥", color: "#557a8c", sub: ["Supplements", "First Aid"] },
 ];
 
 const PRODUCTS = [
@@ -85,6 +85,34 @@ function App() {
   const [products, setProducts] = useState(PRODUCTS);
   const [cats, setCats]         = useState(CATEGORIES);
 
+  // Fetch real products from backend
+  useEffect(() => {
+    fetch('http://localhost:8080/api/v1/products')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data) && data.length > 0) {
+          const mapped = data.map(p => ({
+            id:       p.id,
+            name:     p.name,
+            category: p.category,
+            price:    p.price,
+            orig:     p.originalPrice || p.price,
+            rating:   p.rating    || 4.5,
+            reviews:  p.reviewCount || 0,
+            badge:    p.badge     || 'New',
+            color:    '#557a8c',
+            emoji:    '📦',
+            imgs:     p.imageUrls || [],
+            specs:    p.specs     || [],
+            sub:      p.subCategory || p.category,
+            stock:    p.stock,
+          }));
+          setProducts(mapped);
+        }
+      })
+      .catch(() => {}); // keep static fallback if backend is down
+  }, []);
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -96,43 +124,43 @@ function App() {
               <Route path="/auth-builder-ui" element={<AuthBuilderUI />} />
             </Route>
 
-            {/* Admin panel (no navbar) */}
+            {/* Admin panel — no navbar */}
             <Route path="/admin" element={<AdminPanel />}>
               <Route index element={<Navigate to="products" replace />} />
               <Route path="products"   element={<AdminProducts />} />
               <Route path="categories" element={<AdminCategories />} />
             </Route>
 
-            {/* Seller dashboard (no navbar) ← NEW */}
+            {/* Seller dashboard — no navbar */}
             <Route path="/seller-dashboard" element={<SellerDashboard />} />
 
             {/* Main site with navbar + footer */}
             <Route element={<MainLayout />}>
-              <Route path="/"                   element={<QuickArt products={products} setProducts={setProducts} cats={cats} setCats={setCats} />} />
-              <Route path="/quickart"           element={<Navigate to="/" replace />} />
-              <Route path="/login"              element={<LoginPage />} />
-              <Route path="/register"           element={<RegisterPage />} />
-              <Route path="/home"               element={<Home />} />
-              <Route path="/quick-art-ai"       element={<QuickArtAI />} />
-              <Route path="/quickart3d"         element={<QuickArt3D />} />
+              <Route path="/"                     element={<QuickArt products={products} setProducts={setProducts} cats={cats} setCats={setCats} />} />
+              <Route path="/quickart"             element={<Navigate to="/" replace />} />
+              <Route path="/login"                element={<LoginPage />} />
+              <Route path="/register"             element={<RegisterPage />} />
+              <Route path="/home"                 element={<Home />} />
+              <Route path="/quick-art-ai"         element={<QuickArtAI />} />
+              <Route path="/quickart3d"           element={<QuickArt3D />} />
               <Route path="/virtual-fitting-room" element={<VirtualFittingRoom />} />
-              <Route path="/payment"            element={<Payment />} />
-              <Route path="/cloth-gallery"      element={<ClothGallery />} />
-              <Route path="/ar-viewer"          element={<ARViewer />} />
-              <Route path="/all-categories"     element={<AllCategory categories={cats} products={products} />} />
-              <Route path="/admin-login"        element={<AdminLoginPage />} />
-              <Route path="/website-builder"    element={<WebsiteBuilder />} />
-              <Route path="/cart"               element={<CartPage />} />
-              <Route path="/about-us"           element={<AboutUsPage />} />
-              <Route path="/offers"             element={<OffersPage />} />
-              <Route path="/frequent-search"    element={<FreqSearchPage />} />
-              <Route path="/top-selling"        element={<TopSellingPage />} />
-              <Route path="/contact-us"         element={<ContactUsPage />} />
-              <Route path="/help-center"        element={<HelpCenterPage />} />
-              <Route path="/new-arrivals"       element={<NewArrivalsPage />} />
-              <Route path="/brand-store"        element={<BrandStorePage />} />
-              <Route path="/flash-deals"        element={<OffersPage />} />
-              <Route path="/page/:pageSlug"     element={<InfoPage />} />
+              <Route path="/payment"              element={<Payment />} />
+              <Route path="/cloth-gallery"        element={<ClothGallery />} />
+              <Route path="/ar-viewer"            element={<ARViewer />} />
+              <Route path="/all-categories"       element={<AllCategory categories={cats} products={products} />} />
+              <Route path="/admin-login"          element={<AdminLoginPage />} />
+              <Route path="/website-builder"      element={<WebsiteBuilder />} />
+              <Route path="/cart"                 element={<CartPage />} />
+              <Route path="/about-us"             element={<AboutUsPage />} />
+              <Route path="/offers"               element={<OffersPage />} />
+              <Route path="/frequent-search"      element={<FreqSearchPage />} />
+              <Route path="/top-selling"          element={<TopSellingPage />} />
+              <Route path="/contact-us"           element={<ContactUsPage />} />
+              <Route path="/help-center"          element={<HelpCenterPage />} />
+              <Route path="/new-arrivals"         element={<NewArrivalsPage />} />
+              <Route path="/brand-store"          element={<BrandStorePage />} />
+              <Route path="/flash-deals"          element={<OffersPage />} />
+              <Route path="/page/:pageSlug"       element={<InfoPage />} />
             </Route>
 
           </Routes>
