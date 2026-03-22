@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +21,15 @@ public class GeminiService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String getGeminiResponse(String prompt) {
-        if (apiKey == null || apiKey.isBlank()) {
-            return "Gemini API key is not configured.";
-        }
-
         // The official Gemini API endpoint (using the fast 1.5 Flash model)
+        // New working URL
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
 
         // Set up the headers
+// Set up the headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("User-Agent", "Mozilla/5.0");
+        headers.set("User-Agent", "Mozilla/5.0"); // <-- Add this disguise!
 
         // Build the JSON payload structure that Gemini requires
         Map<String, Object> requestBody = Map.of(
@@ -48,24 +45,15 @@ public class GeminiService {
 
         try {
             // Send the POST request to Google
-            @SuppressWarnings("rawtypes")
             ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
 
             // Navigate through the nested JSON response to extract just the text
-            @SuppressWarnings("unchecked")
-            Map<String, Object> body = (Map<String, Object>) response.getBody();
-            
+            Map<String, Object> body = response.getBody();
             if (body != null && body.containsKey("candidates")) {
-                @SuppressWarnings("unchecked")
                 List<Map<String, Object>> candidates = (List<Map<String, Object>>) body.get("candidates");
-                
                 if (!candidates.isEmpty()) {
-                    @SuppressWarnings("unchecked")
                     Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
-                    
-                    @SuppressWarnings("unchecked")
                     List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
-
                     if (!parts.isEmpty()) {
                         return (String) parts.get(0).get("text");
                     }

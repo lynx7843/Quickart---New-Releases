@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Filter, Heart, Plus, Star } from "lucide-react";
+import { Filter, Heart, Plus, Star, X, ShoppingCart, CreditCard, Truck, Shield, ChevronRight, Minus, Zap } from "lucide-react";
 import Footer from "./Footer.jsx";
 import { useCart } from "../pages/CartContext.jsx";
 
@@ -14,7 +14,7 @@ function StarRating({ rating }) {
   );
 }
 
-function ProductCard({ product: p, onAdd, onWish, wished }) {
+function ProductCard({ product: p, onAdd, onWish, wished, onClick }) {
   return (
     <div style={{ background:"#fff", borderRadius:16, padding:14, boxShadow:"0 4px 24px rgba(0,0,0,0.04)", transition:"all 0.2s", display: 'flex', flexDirection: 'column', justifyContent: 'space-between', cursor: 'pointer' }}
       onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.08)";}}
@@ -46,6 +46,352 @@ function ProductCard({ product: p, onAdd, onWish, wished }) {
           <button onClick={(e)=>{e.stopPropagation(); onAdd(p)}} style={{ width:28, height:28, borderRadius:"50%", border:"none", background:"#1a1a1a", color:"#fff", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
             <Plus size={14}/>
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Item Detail Modal ─────────────────────────────────────────── */
+function ItemDetailModal({ item, onClose, onAddToCart }) {
+  const [qty, setQty] = useState(1);
+  const [selectedPayment, setSelectedPayment] = useState("card");
+  const [wished, setWished] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  // Prevent body scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const price = item.price || 2990;
+  const total = price * qty;
+
+  const paymentMethods = [
+    { id: "card", icon: "💳", label: "Credit / Debit Card" },
+    { id: "cod",  icon: "💵", label: "Cash on Delivery" },
+    { id: "bank", icon: "🏦", label: "Bank Transfer" },
+    { id: "wallet", icon: "📱", label: "Digital Wallet" },
+  ];
+
+  const handleAddToCart = () => {
+    onAddToCart({ ...item, price, qty });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 10000,
+        background: "rgba(10,10,20,0.55)",
+        backdropFilter: "blur(6px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "20px",
+        animation: "backdropIn 0.25s ease",
+      }}
+    >
+      <style>{`
+        @keyframes backdropIn { from { opacity:0 } to { opacity:1 } }
+        @keyframes modalSlideUp {
+          from { opacity:0; transform: translateY(32px) scale(0.97) }
+          to   { opacity:1; transform: translateY(0) scale(1) }
+        }
+        @keyframes shimmer {
+          0%   { background-position: -400px 0 }
+          100% { background-position: 400px 0 }
+        }
+        .pay-option {
+          display: flex; align-items: center; gap: 10px;
+          padding: 10px 14px; border-radius: 12px; cursor: pointer;
+          border: 1.5px solid #eee; background: #fafafa;
+          font-size: 13px; font-weight: 500; color: #444;
+          transition: all 0.2s;
+        }
+        .pay-option:hover { border-color: #557a8c; background: rgba(85,122,140,0.05); }
+        .pay-option.selected {
+          border-color: #557a8c; background: rgba(85,122,140,0.1);
+          color: #1a1a1a; font-weight: 700;
+        }
+        .modal-img-wrap {
+          position: relative; overflow: hidden; border-radius: 20px;
+          background: linear-gradient(135deg, #f0f4f7 0%, #e8eff3 100%);
+        }
+        .modal-img-wrap img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+        .modal-img-wrap:hover img { transform: scale(1.04); }
+        .qty-btn {
+          width: 34px; height: 34px; border-radius: 10px;
+          border: 1.5px solid #e0e0e0; background: #fff;
+          cursor: pointer; display: flex; align-items: center; justify-content: center;
+          font-size: 16px; font-weight: 700; color: #333;
+          transition: all 0.15s;
+        }
+        .qty-btn:hover { border-color: #557a8c; color: #557a8c; background: rgba(85,122,140,0.05); }
+        .primary-btn {
+          flex: 1; padding: 14px; border-radius: 14px; border: none;
+          font-size: 14px; font-weight: 800; cursor: pointer;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          transition: all 0.2s; letter-spacing: 0.3px;
+        }
+        .primary-btn.cart {
+          background: #1a1a1a; color: #fff;
+        }
+        .primary-btn.cart:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .primary-btn.buy {
+          background: linear-gradient(135deg, #557a8c, #3d5f6e); color: #fff;
+        }
+        .primary-btn.buy:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(85,122,140,0.4); }
+        .badge-pill {
+          display: inline-flex; align-items: center; gap: 4px;
+          padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+        }
+        .trust-row {
+          display: flex; gap: 16px; flex-wrap: wrap;
+        }
+        .trust-item {
+          display: flex; align-items: center; gap: 6px;
+          font-size: 11px; color: #777; font-weight: 500;
+        }
+      `}</style>
+
+      {/* Modal Panel */}
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#fff",
+          borderRadius: 28,
+          width: "min(900px, 100%)",
+          maxHeight: "92vh",
+          overflow: "hidden",
+          display: "flex",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.25)",
+          animation: "modalSlideUp 0.3s cubic-bezier(0.22,1,0.36,1)",
+          position: "relative",
+        }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute", top: 20, right: 20, zIndex: 10,
+            width: 36, height: 36, borderRadius: "50%",
+            border: "none", background: "rgba(0,0,0,0.08)",
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.15)"}
+          onMouseLeave={e => e.currentTarget.style.background = "rgba(0,0,0,0.08)"}
+        >
+          <X size={16} color="#444" />
+        </button>
+
+        {/* LEFT — Image Panel */}
+        <div style={{
+          width: "42%", flexShrink: 0,
+          background: "linear-gradient(160deg, #eef2f5 0%, #dde6ec 100%)",
+          padding: 32,
+          display: "flex", flexDirection: "column", gap: 16,
+          position: "relative",
+        }}>
+          {/* Badge */}
+          <div style={{ display: "flex", gap: 8 }}>
+            <span className="badge-pill" style={{ background: "rgba(85,122,140,0.15)", color: "#3d5f6e" }}>
+              ✨ New Arrival
+            </span>
+            <span className="badge-pill" style={{ background: "rgba(34,197,94,0.12)", color: "#16a34a" }}>
+              ✅ In Stock
+            </span>
+          </div>
+
+          {/* Main Image */}
+          <div className="modal-img-wrap" style={{ flex: 1, minHeight: 240 }}>
+            {item.image ? (
+              <img src={item.image} alt={item.name} />
+            ) : (
+              <div style={{
+                width: "100%", height: "100%", minHeight: 240,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 80,
+              }}>
+                {item.emoji || "🛍️"}
+              </div>
+            )}
+          </div>
+
+          {/* Thumbnail strip placeholder */}
+          <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{
+                width: 48, height: 48, borderRadius: 10,
+                background: i === 0 ? "rgba(85,122,140,0.3)" : "rgba(255,255,255,0.6)",
+                border: i === 0 ? "2px solid #557a8c" : "2px solid transparent",
+                cursor: "pointer", overflow: "hidden",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                {item.image
+                  ? <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: i===0?1:0.5 }} />
+                  : <span style={{ fontSize: 20 }}>{item.emoji || "🛍️"}</span>
+                }
+              </div>
+            ))}
+          </div>
+
+          {/* Wish button */}
+          <button
+            onClick={() => setWished(w => !w)}
+            style={{
+              position: "absolute", top: 32, right: 32,
+              width: 38, height: 38, borderRadius: "50%",
+              border: "none", background: "#fff",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s",
+            }}
+          >
+            <Heart size={16} color={wished ? "#ef4444" : "#aaa"} fill={wished ? "#ef4444" : "none"} />
+          </button>
+        </div>
+
+        {/* RIGHT — Details Panel */}
+        <div style={{
+          flex: 1, padding: "32px 32px 28px",
+          overflowY: "auto", display: "flex", flexDirection: "column", gap: 18,
+        }}>
+
+          {/* Name + Rating */}
+          <div>
+            <h2 style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 22, fontWeight: 800, color: "#1a1a1a",
+              marginBottom: 8, lineHeight: 1.2,
+            }}>
+              {item.name}
+            </h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ display: "flex", gap: 2 }}>
+                {[1,2,3,4,5].map(i => (
+                  <Star key={i} size={14} fill={i<=4?"#f59e0b":"none"} color={i<=4?"#f59e0b":"#ddd"} />
+                ))}
+              </div>
+              <span style={{ fontSize: 12, color: "#888", fontWeight: 500 }}>4.0 · 128 reviews</span>
+            </div>
+          </div>
+
+          {/* Price */}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            <span style={{ fontSize: 28, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-1px" }}>
+              LKR {total.toLocaleString()}
+            </span>
+            <span style={{ fontSize: 14, color: "#bbb", textDecoration: "line-through" }}>
+              LKR {(total * 1.2).toLocaleString()}
+            </span>
+            <span className="badge-pill" style={{ background: "#fef2f2", color: "#dc2626" }}>20% OFF</span>
+          </div>
+
+          {/* Description */}
+          <div>
+            <p style={{
+              fontSize: 13, color: "#666", lineHeight: 1.7, margin: 0,
+              borderLeft: "3px solid #e0e8ec", paddingLeft: 12,
+            }}>
+              Premium quality {item.name.toLowerCase()} crafted for everyday excellence. 
+              Designed with attention to detail and built to last — perfect for those who 
+              value style, comfort, and reliability in every purchase.
+            </p>
+          </div>
+
+          {/* Specs */}
+          <div style={{
+            display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8,
+          }}>
+            {["High Quality Material", "1 Year Warranty", "Free Returns", "Genuine Product"].map((spec, i) => (
+              <div key={i} style={{
+                display: "flex", alignItems: "center", gap: 7,
+                fontSize: 12, color: "#555", fontWeight: 500,
+              }}>
+                <span style={{
+                  width: 18, height: 18, borderRadius: "50%",
+                  background: "rgba(85,122,140,0.12)", color: "#557a8c",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 10, fontWeight: 800, flexShrink: 0,
+                }}>✓</span>
+                {spec}
+              </div>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: "#f0f0f0" }} />
+
+          {/* Quantity */}
+          <div>
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#888", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>Quantity</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <button className="qty-btn" onClick={() => setQty(q => Math.max(1, q-1))}>
+                <Minus size={14} />
+              </button>
+              <span style={{ fontSize: 18, fontWeight: 800, color: "#1a1a1a", minWidth: 28, textAlign: "center" }}>{qty}</span>
+              <button className="qty-btn" onClick={() => setQty(q => q+1)}>
+                <Plus size={14} />
+              </button>
+              <span style={{ fontSize: 12, color: "#aaa", marginLeft: 4 }}>Max 10 per order</span>
+            </div>
+          </div>
+
+          {/* Payment Method */}
+          <div>
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#888", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Payment Method
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {paymentMethods.map(pm => (
+                <div
+                  key={pm.id}
+                  className={`pay-option ${selectedPayment === pm.id ? "selected" : ""}`}
+                  onClick={() => setSelectedPayment(pm.id)}
+                >
+                  <span>{pm.icon}</span>
+                  <span>{pm.label}</span>
+                  {selectedPayment === pm.id && (
+                    <span style={{ marginLeft: "auto", width: 16, height: 16, borderRadius: "50%", background: "#557a8c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ color: "#fff", fontSize: 9, fontWeight: 900 }}>✓</span>
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+            <button className="primary-btn cart" onClick={handleAddToCart}>
+              <ShoppingCart size={16} />
+              {added ? "Added! ✓" : "Add to Cart"}
+            </button>
+            <button className="primary-btn buy">
+              <Zap size={16} />
+              Buy Now
+            </button>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="trust-row">
+            <div className="trust-item"><Truck size={13} color="#557a8c" /> Free delivery over LKR 5,000</div>
+            <div className="trust-item"><Shield size={13} color="#557a8c" /> Secure Checkout</div>
+            <div className="trust-item"><CreditCard size={13} color="#557a8c" /> Easy EMI Available</div>
+          </div>
         </div>
       </div>
     </div>
@@ -254,6 +600,7 @@ const AllCategory = ({ products = [] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
   const [wish, setWish] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null); // ← modal state
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [notif, setNotif] = useState(null);
@@ -291,6 +638,19 @@ const AllCategory = ({ products = [] }) => {
 
   return (
     <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "#f8f9fa", minHeight: "100vh", display: "flex", flexDirection: "column", width: "100%" }}>
+
+      {/* ─── Item Detail Modal ─── */}
+      {selectedItem && (
+        <ItemDetailModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onAddToCart={(p) => {
+            addToCart(p);
+            notify(`✅ ${p.name} added to cart!`);
+          }}
+        />
+      )}
+
       {notif && (
         <div style={{
           position: "fixed", top: 80, right: 20, background: "#1a1a1a", color: "#fff",
@@ -306,7 +666,6 @@ const AllCategory = ({ products = [] }) => {
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Sidebar Styling */
         .sidebar-container {
           width: 260px;
           flex-shrink: 0;
@@ -353,7 +712,6 @@ const AllCategory = ({ products = [] }) => {
           font-size: 18px;
         }
 
-        /* Main Content */
         .main-content {
           flex: 1;
           background: #f8f9fa;
@@ -371,7 +729,6 @@ const AllCategory = ({ products = [] }) => {
           opacity: 0.5;
         }
 
-        /* Hero Section */
         .category-hero {
           background: white;
           border-radius: 24px;
@@ -432,22 +789,14 @@ const AllCategory = ({ products = [] }) => {
           width: 100%;
           color: #1a1a1a;
         }
-        .sub-card-link-wrapper {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-          width: 100%;
-        }
 
-        /* Grid System */
         .sub-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           gap: 20px;
         }
 
+        /* Sub-card now opens modal */
         .sub-card {
           background: white;
           border-radius: 16px;
@@ -500,11 +849,15 @@ const AllCategory = ({ products = [] }) => {
           border-color: #557a8c;
         }
 
-        /* Empty State */
         .empty-state {
           text-align: center;
           padding: 60px;
           color: #999;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
 
@@ -512,9 +865,7 @@ const AllCategory = ({ products = [] }) => {
         
         {/* Sidebar */}
         <div className="sidebar-container">
-          <div className="sidebar-header">
-            Categories
-          </div>
+          <div className="sidebar-header">Categories</div>
           <div style={{ overflowY: "auto", flex: 1, padding: "10px 0" }}>
             {categoriesData.map((cat) => (
               <div 
@@ -550,18 +901,21 @@ const AllCategory = ({ products = [] }) => {
               </div>
             </div>
 
-            {/* Grid */}
+            {/* Sub-category Grid — clicking opens modal */}
             {filteredSubs.length > 0 ? (
               <div className="sub-grid">
                 {filteredSubs.map((sub, index) => (
-                  <div key={sub.name} className="sub-card" style={{ animationDelay: `${index * 20}ms` }}>
-                    <div className="sub-card-link-wrapper">
-                      <img
-                        src={sub.image || `https://via.placeholder.com/200x200.png/f8f9fa/666?text=${sub.name.charAt(0)}`}
-                        alt={sub.name}
-                      />
-                      <span className="sub-name">{sub.name}</span>
-                    </div>
+                  <div
+                    key={sub.name}
+                    className="sub-card"
+                    style={{ animationDelay: `${index * 20}ms` }}
+                    onClick={() => setSelectedItem({ ...sub, price: 2990 + index * 100 })}
+                  >
+                    <img
+                      src={sub.image || `https://via.placeholder.com/200x200.png/f8f9fa/666?text=${sub.name.charAt(0)}`}
+                      alt={sub.name}
+                    />
+                    <span className="sub-name">{sub.name}</span>
                     <button
                       className="add-to-cart-btn"
                       onClick={(e) => {
@@ -570,7 +924,9 @@ const AllCategory = ({ products = [] }) => {
                         addToCart(product);
                         notify(`✅ ${sub.name} added to cart!`);
                       }}
-                    >+ Add to Cart</button>
+                    >
+                      + Add to Cart
+                    </button>
                   </div>
                 ))}
               </div>
@@ -581,6 +937,7 @@ const AllCategory = ({ products = [] }) => {
               </div>
             )}
             
+            {/* All Products Section */}
             <div style={{ marginTop: 60 }}>
               <div style={{ marginBottom:34 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
@@ -593,12 +950,12 @@ const AllCategory = ({ products = [] }) => {
                     <button onClick={() => navigate('/all-categories')} style={{ background:"none", border:"1px solid #557a8c", color:"#557a8c", borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, fontWeight:600 }}>View All →</button>
                   </div>
                 </div>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }} onClick={() => props.openItemDetailModal(p)}>
                   {products.map(p=><ProductCard key={p.id} product={p} onAdd={addCart} onWish={toggleWish} wished={wish.includes(p.id)}/>)}
                 </div>
               </div>
-            
             </div>
+
           </div>
         </div>
       </div>

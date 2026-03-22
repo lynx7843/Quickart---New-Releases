@@ -412,14 +412,137 @@ function SignUp({onSwitch,onSuccess}){
   );
 }
 
+// ── PAYMENT ───────────────────────────────────────────────────────────────────
+function PaymentPage({ onSuccess }) {
+  const [loading, setLoading] = useState(false);
+
+  const handlePay = () => {
+    setLoading(true);
+    // Simulate backend payment processing
+    setTimeout(() => {
+      setLoading(false);
+      onSuccess();
+    }, 2000);
+  };
+
+  return (
+    <div className="payment-page">
+      <div className="payment-container">
+        <div className="payment-header">
+          <h2>Secure Checkout</h2>
+          <p>Complete your purchase to access the Admin Workspace.</p>
+        </div>
+
+        <div className="payment-grid">
+          <div>
+            <div className="pay-card">
+              <div className="pay-section-title"><span>1</span> Payment Method</div>
+              <div className="pay-methods">
+                <button className="pay-method-btn active"><span className="pay-method-icon">💳</span>Card</button>
+                <button className="pay-method-btn"><span className="pay-method-icon">🅿️</span>PayPal</button>
+                <button className="pay-method-btn"><span className="pay-method-icon"></span>Apple</button>
+              </div>
+
+              <div className="card-input-group">
+                <label>Card Number</label>
+                <div className="input-wrap">
+                  <span className="input-icon">💳</span>
+                  <input type="text" placeholder="0000 0000 0000 0000" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div>
+                  <label>Expiry Date</label>
+                  <div className="input-wrap"><span className="input-icon">📅</span><input type="text" placeholder="MM / YY" /></div>
+                </div>
+                <div>
+                  <label>CVC</label>
+                  <div className="input-wrap"><span className="input-icon">🔒</span><input type="text" placeholder="123" /></div>
+                </div>
+              </div>
+              
+              <div className="form-group" style={{marginTop: 12}}>
+                <label>Cardholder Name</label>
+                <div className="input-wrap"><span className="input-icon">👤</span><input type="text" placeholder="Full Name" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="pay-card order-summary">
+              <div className="summary-plan-badge">
+                <div className="summary-plan-name">Admin Pro Access</div>
+                <div className="summary-plan-sub">Billed monthly</div>
+              </div>
+
+              <div className="summary-line"><span className="lbl">Subtotal</span><span className="val">$49.00</span></div>
+              <div className="summary-line"><span className="lbl">Tax</span><span className="val">$4.90</span></div>
+              <div className="summary-divider"></div>
+              <div className="summary-line total"><span className="lbl">Total</span><span className="val">$53.90</span></div>
+
+              <button className="pay-now-btn" onClick={handlePay} disabled={loading}>{loading ? 'Processing...' : 'Pay & Access'}</button>
+              <div className="secure-badges"><span className="secure-badge">🔒 Secure SSL Encrypted</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── INTRO ─────────────────────────────────────────────────────────────────────
+function IntroPage({ onStart }) {
+  return (
+    <div className="page">
+      <div className="auth-card" style={{ maxWidth: '600px' }}>
+        <div className="auth-badge">✨ Admin Setup</div>
+        <h1 className="auth-title">Complete Your<br /><span style={{background:'var(--gradient)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Registration</span></h1>
+        <p className="auth-subtitle">Unlock full access to the admin dashboard in 3 simple steps.</p>
+
+        <div style={{ display: 'grid', gap: '20px', marginBottom: '30px' }}>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--surface2)', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 'bold', color: 'var(--text)' }}>1</div>
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '4px', color: 'var(--text)' }}>Create Account</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Sign up with your email or social accounts to verify your identity.</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--surface2)', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 'bold', color: 'var(--text)' }}>2</div>
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '4px', color: 'var(--text)' }}>Add Payment Method</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Securely link your credit card or PayPal for subscription billing.</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--surface2)', width: '40px', height: '40px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 'bold', color: 'var(--text)' }}>3</div>
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '4px', color: 'var(--text)' }}>Access Dashboard</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Get instant access to analytics, user management, and settings.</p>
+            </div>
+          </div>
+        </div>
+
+        <button className="btn-primary" onClick={onStart}>
+          Start Registration →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── APP ───────────────────────────────────────────────────────────────────────
 export default function AuthBuilderUI(){
   const navigate = useNavigate();
-  const [page, setPage] = useState('signin');
+  const [page, setPage] = useState('intro');
 
   const handleSuccess = () => {
-    // After successful sign in or sign up, navigate to the main page
-    navigate('/');
+    setPage('payment');
+  };
+
+  const handlePaymentSuccess = () => {
+    navigate('/admin');
   };
 
   return(
@@ -427,14 +550,18 @@ export default function AuthBuilderUI(){
       <style>{styles}</style>
       <div className="app">
         <nav className="nav">
-          <div className="logo" onClick={()=>setPage('signin')}>⬡ Launchpad</div>
-          <div className="nav-links">
-            {page!=='signin'&&<button className="nav-btn nav-btn-outline" onClick={() => setPage('signin')}>Sign In</button>}
-            {page!=='signup'&&<button className="nav-btn nav-btn-solid" onClick={() => setPage('signup')}>Get Started</button>}
-          </div>
+          <div className="logo" onClick={()=>setPage('intro')}>⬡ Launchpad</div>
+          {page !== 'payment' && page !== 'intro' && (
+            <div className="nav-links">
+              {page!=='signin'&&<button className="nav-btn nav-btn-outline" onClick={() => setPage('signin')}>Sign In</button>}
+              {page!=='signup'&&<button className="nav-btn nav-btn-solid" onClick={() => setPage('signup')}>Get Started</button>}
+            </div>
+          )}
         </nav>
+        {page==='intro'&&<IntroPage onStart={()=>setPage('signin')}/>}
         {page==='signin'&&<SignIn onSwitch={setPage} onSuccess={handleSuccess}/>}
         {page==='signup'&&<SignUp onSwitch={setPage} onSuccess={handleSuccess}/>}
+        {page==='payment'&&<PaymentPage onSuccess={handlePaymentSuccess}/>}
       </div>
     </>
   );

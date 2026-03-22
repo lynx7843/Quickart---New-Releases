@@ -95,7 +95,7 @@ function ProductCard({ product: p, onAdd, onWish, wished }) {
 
 export default function QuickArt({ products, setProducts, cats, setCats }) {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const { cart, addToCart, cartTotal, cartCount, isCartOpen, closeCart, removeItem } = useCart();
   const [slide, setSlide] = useState(0);
   const [tab, setTab] = useState("ai");
@@ -576,7 +576,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
                 <span style={{ fontSize:18 }}>{e}</span>
                 <span style={{ color:"rgba(255,255,255,0.75)", fontSize:13, fontWeight:600 }}>{l}</span>
               </div>
-            ))}
+          ))}
           </div>
         </div>
 
@@ -612,8 +612,8 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
             </div>
             
             <button 
-                onClick={()=>navigate('/admin')} 
-                style={{ 
+                onClick={()=>navigate('/admin-login')}
+                style={{
                     position:"relative", zIndex:2, 
                     background:"#557a8c", 
                     color:"#fff", border:"none", borderRadius:14, 
@@ -630,6 +630,13 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
             </button>
         </div>
       </div>
+
+
+               {/* Image above the footer */}
+        <div style={{ marginBottom: 34, textAlign: "center" }}>
+          <img src="https://via.placeholder.com/1200x200" alt="Banner Ad" style={{ maxWidth: "100%", borderRadius: 20 }} />
+        </div>
+
 
     </div>
   );

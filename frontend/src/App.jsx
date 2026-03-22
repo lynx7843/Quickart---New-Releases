@@ -8,6 +8,9 @@ import QuickArtAI from './QuickArtAI.jsx';
 import QuickArt3D from './quickart3d.jsx';
 import VirtualFittingRoom from './VirtualFittingRoom.jsx';
 import ARViewer from './ARViewer.jsx';
+import Payment from './Payment.jsx';
+import AdminLoginPage from './AdminLogin.jsx';
+import ClothGallery from './ClothGallery.jsx';
 import AllCategory from './assets/all.jsx';
 import Home from './assets/home.jsx';
 import AuthBuilderUI from './AuthBuilderUI.jsx';
@@ -92,6 +95,7 @@ function App() {
 
             <Route path="/admin" element={<AdminPanel />}>
               <Route index element={<Navigate to="products" replace />} />
+              <Route index element={<Navigate to="/admin-login" replace />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="categories" element={<AdminCategories />} />
             </Route>
@@ -105,8 +109,11 @@ function App() {
               <Route path="/quick-art-ai" element={<QuickArtAI />} />
               <Route path="/quickart3d" element={<QuickArt3D />} />
               <Route path="/virtual-fitting-room" element={<VirtualFittingRoom />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/cloth-gallery" element={<ClothGallery />} />
               <Route path="/ar-viewer" element={<ARViewer />} />
               <Route path="/all-categories" element={<AllCategory categories={cats} products={products} />} />
+              <Route path="/admin-login" element={<AdminLoginPage />} />
               <Route path="/website-builder" element={<WebsiteBuilder />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/about-us" element={<AboutUsPage />} />
