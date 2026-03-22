@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.quickart.model.Product;
-import com.example.backend.quickart.repository.ProductRepository;
+import com.example.backend.model.Product;
+import com.example.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
