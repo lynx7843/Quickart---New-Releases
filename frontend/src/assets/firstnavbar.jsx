@@ -182,13 +182,6 @@ function Navbar() {
           </div>
         )}
 
-        <button
-          className="create-account-btn"
-          onClick={() => navigate('/register')}
-          style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.1)', background: "#557a8c", color: "#fff", border: "none" }}
-        >
-          Create account
-        </button>
       </div>
     </nav>
   );

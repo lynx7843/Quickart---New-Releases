@@ -79,14 +79,15 @@ public class AuthService {
                 user.getRole()
         );
 
+        // ✅ Correct order matching constructor: (id, name, email, phone, message, role, token)
         return new AuthUserResponse(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getPhone(),
+                "Login successful",
                 user.getRole(),
-                token,
-                "Login successful"
+                token
         );
     }
 

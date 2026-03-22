@@ -117,23 +117,7 @@ function Home() {
           <div className="image-type-card">
             <div className="image-type-icon">✨</div>
             <p>Lifestyle</p>
-          </div>
-          <div
-            className="image-type-card"
-            onClick={() => navigate('/admin')}
-            style={{
-              background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
-              boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)",
-              border: "1px solid rgba(255,255,255,0.2)"
-            }}
-          >
-            <div className="image-type-icon" style={{ background: "rgba(255,255,255,0.2)", color: "#fff" }}>⚙️</div>
-            <p style={{ color: "#fff", fontWeight: "bold" }}>Admin Panel</p>
-            <div style={{ marginTop: "8px", fontSize: "11px", color: "rgba(255,255,255,0.9)", background: "rgba(0,0,0,0.2)", padding: "4px 8px", borderRadius: "6px", textAlign: "left" }}>
-              <div>User: admin</div>
-              <div>Pass: password</div>
-            </div>
-          </div>
+          </div>          
         </div>
       </div>
 
