@@ -185,9 +185,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
         </div>
       )}
 
-      <button onClick={()=>navigate('/admin')} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1001, background:"#557a8c", color:"#fff", border:"none", borderRadius:14, padding:"10px 16px", cursor:"pointer", fontSize:13, fontWeight:700, display:"flex", alignItems:"center", gap:6, boxShadow: '0 8px 24px rgba(85, 122, 140, 0.25)' }}>
-        <Settings size={14}/> Admin Panel
-      </button>
+
 
       {/* Cart Dropdown */}
       {isCartOpen && (
@@ -590,52 +588,7 @@ export default function QuickArt({ products, setProducts, cats, setCats }) {
           </div>
         </div>
 
-        {/* Admin Panel Access Banner */}
-        <div style={{ background:"linear-gradient(135deg,#4a6878,#557a8c)", borderRadius:24, padding:"36px 44px", marginBottom:34, display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.15)", border:"1px solid rgba(255,255,255,0.05)" }}>
-            <div style={{ position:"absolute", top:-60, right:-60, width:240, height:240, background:"radial-gradient(circle, rgba(85, 122, 140, 0.1) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
-            <div style={{ position:"absolute", bottom:-40, left:40, width:180, height:180, background:"radial-gradient(circle, rgba(85, 122, 140, 0.08) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}></div>
-            
-            <div style={{ position:"relative", zIndex:2, maxWidth:600 }}>
-                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
-                    <div style={{ background:"rgba(255,255,255,0.08)", padding:"10px", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Settings size={22} color="#f4f6fa" />
-                    </div>
-                    <div style={{ display:"flex", flexDirection:"column" }}>
-                        <span style={{ color:"#f4f6fa", fontSize:11, fontWeight:700, letterSpacing:1.5, textTransform:"uppercase" }}>Administrator</span>
-                        <h2 style={{ color:"#fff", fontSize:26, fontWeight:800, margin:0, lineHeight:1.2 }}>Store Management Dashboard</h2>
-                    </div>
-                </div>
-                <p style={{ color:"#e2e8f0", fontSize:14, margin:0, lineHeight:1.6 }}>
-                    Access the backend to manage inventory, track orders, update categories, and configure store settings. 
-                    <span style={{ color:"rgba(255,255,255,0.4)", marginLeft:6 }}>Authorized personnel only.</span>
-                </p>
-            </div>
-            
-            <button 
-                onClick={()=>navigate('/admin-login')}
-                style={{
-                    position:"relative", zIndex:2, 
-                    background:"#557a8c", 
-                    color:"#fff", border:"none", borderRadius:14, 
-                    padding:"16px 32px", cursor:"pointer", 
-                    fontWeight:700, fontSize:14, 
-                    display:"flex", alignItems:"center", gap:10, 
-                    boxShadow:"0 8px 24px rgba(85, 122, 140, 0.25)", 
-                    transition:"all 0.2s ease" 
-                }}
-                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 30px rgba(85, 122, 140, 0.35)";}} 
-                onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 8px 24px rgba(85, 122, 140, 0.25)";}}
-            >
-                Enter Admin Panel <ArrowRight size={18} />
-            </button>
-        </div>
       </div>
-
-
-               {/* Image above the footer */}
-        <div style={{ marginBottom: 34, textAlign: "center" }}>
-          <img src="https://via.placeholder.com/1200x200" alt="Banner Ad" style={{ maxWidth: "100%", borderRadius: 20 }} />
-        </div>
 
 
     </div>
