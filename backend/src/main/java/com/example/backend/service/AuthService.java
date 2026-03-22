@@ -6,6 +6,7 @@ import com.example.backend.dto.RegisterRequest;
 import com.example.backend.dto.RegisterResponse;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.security.JwtUtil;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +17,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AuthService(UserRepository userRepository,
+                       BCryptPasswordEncoder passwordEncoder,
+                       JwtUtil jwtUtil) {
+        this.userRepository  = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil         = jwtUtil;
     }
 
     public RegisterResponse register(RegisterRequest request) {
@@ -35,6 +41,7 @@ public class AuthService {
         user.setEmail(normalizedEmail);
         user.setPhone(request.getPhone().trim());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole() != null ? request.getRole() : "CUSTOMER");
 
         try {
             User savedUser = userRepository.save(user);
@@ -66,11 +73,19 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
         return new AuthUserResponse(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getPhone(),
+                user.getRole(),
+                token,
                 "Login successful"
         );
     }

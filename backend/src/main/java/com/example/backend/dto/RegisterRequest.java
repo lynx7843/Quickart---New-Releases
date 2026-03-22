@@ -7,6 +7,7 @@ public class RegisterRequest {
     private String phone;
     private String password;
     private String confirmPassword;
+    private String role;
 
     public String getName() {
         return name;
@@ -46,5 +47,13 @@ public class RegisterRequest {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
