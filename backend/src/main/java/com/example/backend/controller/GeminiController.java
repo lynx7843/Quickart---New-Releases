@@ -3,9 +3,10 @@ package com.example.backend.controller;
 import com.example.backend.service.GeminiService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/ai")
-@CrossOrigin(origins = "http://localhost:5173") // Keeps the connection to your React app open
+@RequestMapping("/api/v1/gemini")
 public class GeminiController {
 
     private final GeminiService geminiService;
@@ -15,7 +16,16 @@ public class GeminiController {
     }
 
     @PostMapping("/chat")
-    public String chat(@RequestBody String prompt) {
-        return geminiService.getGeminiResponse(prompt);
+    public Map<String, String> chat(@RequestBody Map<String, String> body) {
+        String prompt   = body.getOrDefault("prompt", "");
+        String response = geminiService.getGeminiResponse(prompt);
+        return Map.of("response", response);
+    }
+
+    @PostMapping("/generate")
+    public Map<String, String> generate(@RequestBody Map<String, String> body) {
+        String prompt   = body.getOrDefault("prompt", "");
+        String response = geminiService.getGeminiResponse(prompt);
+        return Map.of("response", response);
     }
 }
