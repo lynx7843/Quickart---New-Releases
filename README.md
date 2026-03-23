@@ -57,7 +57,7 @@ QuickArt brings products to life using Augmented Reality.
 
 ## 📸 Preview (Screenshots)
 
-> Below are some screenshots of the Quickart mobile application interface.
+> Below are some screenshots of the Quickart web application interface.
 
 ### Home Screen
 ![Home Screen](img/home.png)
