@@ -93,7 +93,7 @@ const VoiceAssistant = ({ onSearch, onClose }) => {
     // Ask Gemini
     try {
       log("Calling Gemini...");
-      const res = await fetch("http://localhost:8080/api/v1/gemini/chat", {
+      const res = await fetch("/api/v1/gemini/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: text }),

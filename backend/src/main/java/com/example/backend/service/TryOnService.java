@@ -17,18 +17,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class TryOnService {
 
-    private static final String REPLICATE_API_URL = "https://api.replicate.com/v1/predictions";
-    private static final String MODEL_VERSION = "c871bb9b046607b680449ecbae55fd8c6d945e0a1948644bf2361b3d021d3ff4";
-
-    @Value("${replicate.api.token}")
     private String replicateToken;
 
     @Value("${cloudinary.cloud.name}")
@@ -46,6 +46,28 @@ public class TryOnService {
 
     public TryOnService(GeminiImageGenerationService geminiImageGenerationService) {
         this.geminiImageGenerationService = geminiImageGenerationService;
+        loadReplicateTokenFromEnv();
+    }
+
+    private void loadReplicateTokenFromEnv() {
+        try {
+            Path envPath = Paths.get(".env");
+            if (!Files.exists(envPath)) {
+                envPath = Paths.get("../.env");
+            }
+            if (Files.exists(envPath)) {
+                List<String> lines = Files.readAllLines(envPath);
+                for (String line : lines) {
+                    line = line.trim();
+                    if (line.startsWith("REPLICATE_API_TOKEN=")) {
+                        this.replicateToken = line.substring("REPLICATE_API_TOKEN=".length()).trim();
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("[TryOnService] Failed to load .env file: " + e.getMessage());
+        }
     }
 
     public TryOnResponse process(TryOnRequest req) {
@@ -57,12 +79,10 @@ public class TryOnService {
         }
 
         try {
-            // Attempt to use Replicate first
             return processWithReplicate(req);
         } catch (Exception e) {
-            // Fallback to Gemini implementation if Replicate fails or is not configured properly
-            System.err.println("[TryOnService] Replicate failed, falling back to Gemini: " + e.getMessage());
-            return processWithGemini(req);
+            System.err.println("[TryOnService] Replicate failed: " + e.getMessage());
+            return TryOnResponse.error("Virtual try-on failed: " + e.getMessage());
         }
     }
 
@@ -170,36 +190,6 @@ public class TryOnService {
         );
     }
 
-    private TryOnResponse processWithGemini(TryOnRequest request) {
-        try {
-            String userImageBase64 = request.userImageBase64();
-            String clothImageBase64 = request.clothImageBase64();
-            String selectedSize = request.selectedSize();
-
-            DecodedImage userImage = decodeImage(userImageBase64);
-            DecodedImage clothImage = decodeImage(clothImageBase64);
-            
-            String generatedImage = geminiImageGenerationService.generateTryOnImage(
-                    extractMimeType(userImage.metadata()),
-                    userImage.bytes(),
-                    extractMimeType(clothImage.metadata()),
-                    clothImage.bytes(),
-                    selectedSize
-            );
-            
-            FitResult fit = deriveFit(selectedSize);
-
-            return TryOnResponse.success(
-                    fit.match(),
-                    fit.reason(),
-                    fit.score(),
-                    generatedImage
-            );
-        } catch (Exception ex) {
-            return TryOnResponse.error(ex.getMessage());
-        }
-    }
-
     private String uploadToCloudinary(byte[] imageBytes, String publicId) throws Exception {
         String uploadUrl = "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload";
         long timestamp = System.currentTimeMillis() / 1000;
@@ -269,46 +259,6 @@ public class TryOnService {
 
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
-    }
-    
-    // Helper methods for Gemini fallback
-    
-    private DecodedImage decodeImage(String dataUrl) throws IOException {
-        int commaIndex = dataUrl.indexOf(',');
-        if (commaIndex < 0) {
-            // Assume it's just base64 if no prefix
-            try {
-                byte[] bytes = Base64.getDecoder().decode(dataUrl);
-                return new DecodedImage(null, bytes);
-            } catch (IllegalArgumentException e) {
-                 throw new IllegalArgumentException("Image must be a valid data URL or Base64 string.");
-            }
-        }
-
-        String metadata = dataUrl.substring(0, commaIndex);
-        String base64Payload = dataUrl.substring(commaIndex + 1);
-
-        byte[] bytes;
-        try {
-            bytes = Base64.getDecoder().decode(base64Payload);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Image payload is not valid Base64.");
-        }
-
-        return new DecodedImage(metadata, bytes);
-    }
-    
-    private String extractMimeType(String metadata) {
-        if (metadata == null || !metadata.startsWith("data:")) {
-            return "image/png";
-        }
-
-        int semicolonIndex = metadata.indexOf(';');
-        if (semicolonIndex < 0) {
-            return "image/png";
-        }
-
-        return metadata.substring(5, semicolonIndex);
     }
 
     private FitResult deriveFit(String size) {

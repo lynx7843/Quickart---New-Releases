@@ -9,7 +9,6 @@ const Payment = () => {
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [error, setError]                   = useState('');
 
-    // Shipping address form state
     const [fullName, setFullName]       = useState('');
     const [addressLine, setAddressLine] = useState('');
     const [city, setCity]               = useState('');
@@ -17,20 +16,17 @@ const Payment = () => {
     const [phone, setPhone]             = useState('');
     const [paymentMethod, setPaymentMethod] = useState('COD');
 
-    const navigate            = useNavigate();
+    const navigate = useNavigate();
 
-    // ── STEP 15: get JWT headers and cart ──
     const { authHeaders, user } = useAuth();
     const { cart, cartTotal }   = useCart();
 
     const handlePayment = async () => {
-        // Validate user is logged in
         if (!user) {
             setError('Please log in before placing an order.');
             return;
         }
 
-        // Validate shipping fields
         if (!fullName || !addressLine || !city || !postalCode || !phone) {
             setError('Please fill in all shipping details.');
             return;
@@ -44,39 +40,43 @@ const Payment = () => {
         setPaymentLoading(true);
         setError('');
 
+        const orderPayload = {
+            items: cart.map(i => ({
+                productId: String(i.productId || i.id),
+                quantity: i.qty || 1,
+            })),
+            shippingAddress: { fullName, addressLine, city, postalCode, phone },
+            paymentMethod,
+        };
+
+        console.log('Placing order:', JSON.stringify(orderPayload, null, 2));
+        console.log('Auth headers:', authHeaders());
+
         try {
-            // ── STEP 15: place order with JWT token ──
             const response = await fetch('http://localhost:8080/api/v1/orders', {
                 method: 'POST',
-                headers: authHeaders(),  // sends Authorization: Bearer <token>
-                body: JSON.stringify({
-                    items: cart.map(i => ({
-                        productId: String(i.id),
-                        quantity:  i.qty || 1,
-                    })),
-                    shippingAddress: {
-                        fullName,
-                        addressLine,
-                        city,
-                        postalCode,
-                        phone,
-                    },
-                    paymentMethod,
-                }),
+                headers: authHeaders(),
+                body: JSON.stringify(orderPayload),
             });
+
+            const rawText = await response.text();
+            console.log('Order response status:', response.status);
+            console.log('Order response body:', rawText);
 
             if (response.ok) {
                 setPaymentSuccess(true);
                 setTimeout(() => navigate('/'), 3000);
             } else {
-                const data = await response.json().catch(() => null);
-                setError(data?.message || 'Order failed. Please try again.');
+                let message = `Order failed (${response.status}).`;
+                try {
+                    const data = JSON.parse(rawText);
+                    message = data?.message || data?.error || message;
+                } catch { message = rawText || message; }
+                setError(message);
             }
         } catch (err) {
-            // Fallback: simulate success for demo if backend not connected
-            console.warn('Order API error, falling back to demo mode:', err.message);
-            setPaymentSuccess(true);
-            setTimeout(() => navigate('/'), 3000);
+            console.error('Network error:', err);
+            setError('Network error: ' + err.message);
         } finally {
             setPaymentLoading(false);
         }
@@ -104,7 +104,6 @@ const Payment = () => {
 
                 {error && <p style={styles.error}>{error}</p>}
 
-                {/* Cart summary */}
                 {cart && cart.length > 0 && (
                     <div style={styles.cartSummary}>
                         <p style={styles.summaryTitle}>Order Summary</p>
@@ -124,7 +123,6 @@ const Payment = () => {
                     </div>
                 )}
 
-                {/* Shipping address */}
                 <p style={styles.sectionLabel}>Shipping Address</p>
 
                 <div style={styles.inputGroup}>
@@ -170,7 +168,6 @@ const Payment = () => {
                     />
                 </div>
 
-                {/* Payment method */}
                 <p style={styles.sectionLabel}>Payment Method</p>
                 <div style={styles.paymentMethods}>
                     <button

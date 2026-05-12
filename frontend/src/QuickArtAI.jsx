@@ -501,8 +501,22 @@ export default function QuickArtAI() {
     setFocused(true);
   };
 
+  const [cooldown, setCooldown] = useState(false);
+  const [cooldownSecs, setCooldownSecs] = useState(0);
+
+  const startCooldown = (seconds) => {
+    setCooldown(true);
+    setCooldownSecs(seconds);
+    const interval = setInterval(() => {
+      setCooldownSecs(prev => {
+        if (prev <= 1) { clearInterval(interval); setCooldown(false); return 0; }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const handleSend = async () => {
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || cooldown) return;
     
     const userMsg = { role: "user", content: prompt };
     setMessages(prev => [...prev, userMsg]);
@@ -510,18 +524,26 @@ export default function QuickArtAI() {
     setLoading(true);
 
     try {
-        const response = await fetch('http://localhost:8080/api/ai/chat', { //Make sure this is the correct URL
+        const response = await fetch('http://localhost:8080/api/v1/gemini/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prompt: userMsg.content })
         });
+
+        if (response.status === 429) {
+            setMessages(prev => [...prev, { role: "ai", content: "⏳ Rate limit reached. Please wait 60 seconds before sending another message." }]);
+            startCooldown(60);
+            setLoading(false);
+            return;
+        }
+
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         
         let replyText = "I'm sorry, I couldn't process that.";
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
             const data = await response.json();
-            replyText = data.reply || data.message || JSON.stringify(data);
+            replyText = data.response || data.reply || data.message || JSON.stringify(data);
         } else {
             replyText = await response.text();
         }
@@ -732,7 +754,7 @@ export default function QuickArtAI() {
                       {/* Icons can be reused here if needed */}
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <button className="qa-send" onClick={handleSend} disabled={loading} style={loading ? { background: "#ccc" } : {}}><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+                      <button className="qa-send" onClick={handleSend} disabled={loading || cooldown} style={loading || cooldown ? { background: "#ccc" } : {}}>{cooldown ? `${cooldownSecs}s` : <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>}</button>
                     </div>
                   </div>
                 </div>

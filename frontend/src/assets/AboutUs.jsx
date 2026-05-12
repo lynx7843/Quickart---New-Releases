@@ -3,6 +3,8 @@ import { Cpu, View, Zap } from 'lucide-react';
 
 const teamMembers = [
   { name: 'KDS Maduranga', id: '10965448', role: 'Team Leader', avatar: 'KM' },
+  { name: 'EDIRISINGHA EDIRISINGHA', id: '10965363', role: 'Member', avatar: 'EE' },
+  { name: 'THENNAKOON THENNAKOON ', id: '10965096', role: 'Member', avatar: 'TT' },  
   { name: 'Mahanama Sewwandi', id: '10965558', role: 'Member', avatar: 'MS' },
   { name: 'Udupiti Deshan', id: '10965350', role: 'Member', avatar: 'UD' },
   { name: 'Keelle Rupasena', id: '10965534', role: 'Member', avatar: 'KR' },

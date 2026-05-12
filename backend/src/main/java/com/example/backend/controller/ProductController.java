@@ -44,8 +44,6 @@ public class ProductController {
         return productService.getBySellerld(sellerId);
     }
 
-    // --- Seller / Admin write endpoints ---
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
