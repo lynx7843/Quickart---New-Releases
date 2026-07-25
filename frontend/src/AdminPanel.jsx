@@ -216,7 +216,7 @@ function AddProductPanel({ onClose, onAdd, categories }) {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/upload/image", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/upload/image`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 
 const CartContext  = createContext();
-const API_BASE     = 'http://localhost:8080/api/v1';
+const API_BASE     = `${import.meta.env.VITE_API_BASE_URL}/v1`;
 
 export const useCart = () => useContext(CartContext);
 

@@ -42,7 +42,7 @@ Respond with ONLY valid JSON like: ["1","2","3","4"]
 Do not include any explanation.`;
 
     try {
-      const res  = await fetch("http://localhost:8080/api/v1/gemini/chat", {
+      const res  = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/gemini/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),

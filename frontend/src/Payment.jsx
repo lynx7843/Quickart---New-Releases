@@ -53,7 +53,7 @@ const Payment = () => {
         console.log('Auth headers:', authHeaders());
 
         try {
-            const response = await fetch('http://localhost:8080/api/v1/orders', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/orders`, {
                 method: 'POST',
                 headers: authHeaders(),
                 body: JSON.stringify(orderPayload),

@@ -87,7 +87,7 @@ function App() {
 
   // Fetch real products from backend
   useEffect(() => {
-    fetch('http://localhost:8080/api/v1/products')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 import { categoriesData } from './assets/all.jsx';
 
-const API_BASE = 'http://localhost:8080/api/v1';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/v1`;
 
 const styles = `
   * { box-sizing: border-box; margin: 0; padding: 0; }

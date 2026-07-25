@@ -275,7 +275,7 @@ const styles = `
 `;
 
 // ── Point this at your Spring Boot server ────────────────────────
-const BACKEND_URL = "http://localhost:8080/api/v1/tryon"; //Make sure this is the correct URL
+const BACKEND_URL = `${import.meta.env.VITE_API_BASE_URL}/v1/tryon`; //Make sure this is the correct URL
 
 export default function VirtualFittingRoom() {
   const navigate = useNavigate();

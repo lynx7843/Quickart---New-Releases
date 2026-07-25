@@ -13,7 +13,7 @@ export default function AdminCategories() {
     const categoryObj = { id, label: newCategory, icon: "🏷️", color: "#64748b", sub: [] };
 
     try {
-      const response = await fetch('http://localhost:8080/api/categories', { //Make sure this is the correct URL
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/categories`, { //Make sure this is the correct URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryObj)
