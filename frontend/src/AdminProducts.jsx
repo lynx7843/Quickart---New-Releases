@@ -38,7 +38,7 @@ export default function AdminProducts() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products`, { //Make sure this is the correct URL
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product)
@@ -57,7 +57,7 @@ export default function AdminProducts() {
   };
 
   const handleDeleteProduct = async (id) => {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/${id}`, { method: 'DELETE' }); //Make sure this is the correct URL
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products/${id}`, { method: 'DELETE' });
     setProducts(products.filter(p => p.id !== id));
     notify("Product deleted successfully!");
   };

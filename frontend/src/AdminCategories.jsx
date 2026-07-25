@@ -7,24 +7,16 @@ export default function AdminCategories() {
   const { user } = useAuth();
   const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = async () => {
+  const handleAddCategory = () => {
     if (!newCategory) return;
     const id = newCategory.toLowerCase().replace(/\s+/g, "-");
     const categoryObj = { id, label: newCategory, icon: "🏷️", color: "#64748b", sub: [] };
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/categories`, { //Make sure this is the correct URL
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(categoryObj)
-      });
-      if (response.ok) {
-        const savedCategory = await response.json();
-        setCategories(prev => [...prev, savedCategory]);
-        setNewCategory("");
-        notify("Category added successfully!");
-      }
-    } catch (error) { notify("Failed to add category.", "error"); }
+    // NOTE: the backend has no categories endpoint yet — manage categories in
+    // local state for now. Swap this for a real API call during the testing phase.
+    setCategories(prev => [...prev, categoryObj]);
+    setNewCategory("");
+    notify("Category added successfully!");
   };
 
   return (
