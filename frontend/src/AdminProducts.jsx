@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 
 export default function AdminProducts() {
   const { products, setProducts, categories, notify, fetchData } = useOutletContext();
-  const { user } = useAuth();
+  const { authHeaders } = useAuth();
 
   // Product Form state
   const [newProduct, setNewProduct] = useState({ name: "", price: "", category: "", imageFile: null, imagePreview: "" });
@@ -40,7 +40,7 @@ export default function AdminProducts() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify(product)
       });
       if (response.ok) {
@@ -51,15 +51,29 @@ export default function AdminProducts() {
       } else {
         notify("Failed to add product.", "error");
       }
-    } catch (error) {
+    } catch {
       notify("Error connecting to backend.", "error");
     }
   };
 
   const handleDeleteProduct = async (id) => {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products/${id}`, { method: 'DELETE' });
-    setProducts(products.filter(p => p.id !== id));
-    notify("Product deleted successfully!");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/products/${id}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+
+      if (response.ok) {
+        setProducts(prev => prev.filter(p => p.id !== id));
+        notify("Product deleted successfully!");
+      } else if (response.status === 401 || response.status === 403) {
+        notify("Not authorized to delete products. Please log in again.", "error");
+      } else {
+        notify("Failed to delete product.", "error");
+      }
+    } catch {
+      notify("Error connecting to backend.", "error");
+    }
   };
 
   const handleImageUpload = (e) => {

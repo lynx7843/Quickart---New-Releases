@@ -274,8 +274,7 @@ const styles = `
   @keyframes vfr-pulse { 50% { opacity: .5; } }
 `;
 
-// ── Point this at your Spring Boot server ────────────────────────
-const BACKEND_URL = `${import.meta.env.VITE_API_BASE_URL}/v1/tryon`; //Make sure this is the correct URL
+const BACKEND_URL = `${import.meta.env.VITE_API_BASE_URL}/v1/tryon`;
 
 export default function VirtualFittingRoom() {
   const navigate = useNavigate();
