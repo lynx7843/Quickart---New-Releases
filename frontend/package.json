@@ -11,12 +11,10 @@
   },
   "dependencies": {
     "@craftjs/core": "^0.2.12",
-    "@google/generative-ai": "^0.24.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/xr": "^6.6.29",
     "lucide-react": "^0.574.0",
-    "openai": "^6.29.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.1",
