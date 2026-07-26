@@ -38,8 +38,8 @@ export default function ARViewer() {
       name: `Design Item ${i + 1}`,
       description: `High quality 3D design item ${i + 1}.`,
       price: 2000 + (i * 500),
-      imageUrl: `${process.env.REACT_APP_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`,
-      model3dUrl: `${process.env.REACT_APP_AR_MODEL_BASE_URL}/item${i + 1}.glb`,
+      imageUrl: `${import.meta.env.VITE_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`,
+      model3dUrl: `${import.meta.env.VITE_AR_MODEL_BASE_URL}/item${i + 1}.glb`,
       category: "DESIGN"
     }));
 

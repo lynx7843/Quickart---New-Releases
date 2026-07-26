@@ -41,8 +41,8 @@ const ProductPage = () => {
       name: "Living room furniture chair",
       description: "Modern minimal living room living room furniture chair.",
       price: 30000,
-      imageUrl: `${process.env.REACT_APP_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`,
-      model3dUrl: `${process.env.REACT_APP_AR_MODEL_BASE_URL}/item1.glb`,
+      imageUrl: `${import.meta.env.VITE_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`,
+      model3dUrl: `${import.meta.env.VITE_AR_MODEL_BASE_URL}/item1.glb`,
       category: "HOME",
       specs: ["High Quality", "Durable", "Modern Design"]
     }));
@@ -54,8 +54,8 @@ const ProductPage = () => {
           // Use real database items, but assign fallback 3D models if they don't have one
           const dbProducts = data.slice(0, 8).map((p, i) => ({
             ...p,
-            model3dUrl: p.model3dUrl || `${process.env.REACT_APP_AR_MODEL_BASE_URL}/item1.glb`,
-            imageUrl: p.imageUrl || (p.imageUrls && p.imageUrls[0]) || `${process.env.REACT_APP_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`
+            model3dUrl: p.model3dUrl || `${import.meta.env.VITE_AR_MODEL_BASE_URL}/item1.glb`,
+            imageUrl: p.imageUrl || (p.imageUrls && p.imageUrls[0]) || `${import.meta.env.VITE_AR_IMAGE_BASE_URL}/item${i + 1}.jpg`
           }));
           const combined = [...dbProducts, ...fallbackProducts].slice(0, 8);
           setProducts(combined);

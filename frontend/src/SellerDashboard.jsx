@@ -204,8 +204,8 @@ export default function SellerDashboard() {
     if (tab === 'orders') fetchOrders();
   }, [tab]);
 
-  const CLOUD_NAME   = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-  const UPLOAD_URL   = process.env.REACT_APP_CLOUDINARY_API_URL;
+  const CLOUD_NAME   = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const UPLOAD_URL   = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
   const handleFileSelect = async (files) => {
     if (!files || files.length === 0) return;
