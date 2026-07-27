@@ -67,7 +67,7 @@ public class ProductService {
         return productRepository.findByCategoryAndActiveTrue(category);
     }
 
-    public List<Product> getBySellerld(String sellerId) {
+    public List<Product> getBySellerId(String sellerId) {
         return productRepository.findBySellerIdAndActiveTrue(sellerId);
     }
 

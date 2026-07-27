@@ -41,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/seller/{sellerId}")
     public List<Product> getBySeller(@PathVariable String sellerId) {
-        return productService.getBySellerld(sellerId);
+        return productService.getBySellerId(sellerId);
     }
 
     @PostMapping
@@ -73,6 +73,6 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
     public List<Product> myListings(Authentication auth) {
         String sellerId = (String) auth.getPrincipal();
-        return productService.getBySellerld(sellerId);
+        return productService.getBySellerId(sellerId);
     }
 }
