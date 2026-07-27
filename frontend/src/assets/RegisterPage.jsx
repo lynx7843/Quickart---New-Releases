@@ -17,6 +17,23 @@ import {
 
 const ADMIN_EMAIL = "quickart_admin@gmail.com";
 
+// Kept in sync with the server-side rules in AuthService.validateRequest
+const EMAIL_PATTERN = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/;
+const PASSWORD_MIN_LENGTH = 8;
+const PASSWORD_MAX_LENGTH = 64;
+
+const passwordError = (password) => {
+  if (password.length < PASSWORD_MIN_LENGTH)
+    return `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+  if (password.length > PASSWORD_MAX_LENGTH)
+    return `Password must be at most ${PASSWORD_MAX_LENGTH} characters`;
+  if (/\s/.test(password)) return "Password cannot contain spaces";
+  if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password))
+    return "Password must include an uppercase letter, a lowercase letter, a number, and a special character";
+  return null;
+};
+
 const roleStyles = `
   .role-toggle {
     display: flex;
@@ -75,6 +92,12 @@ const roleStyles = `
     background: #e3f2fd;
     border-left-color: #1565c0;
     color: #1565c0;
+  }
+  .password-hint {
+    font-size: 11.5px;
+    color: #888;
+    line-height: 1.4;
+    margin-top: 5px;
   }
   .admin-detected {
     display: flex;
@@ -140,8 +163,14 @@ const RegisterPage = () => {
     let newErrors = {};
     if (!formData.name)     newErrors.name     = "Full name required";
     if (!formData.email)    newErrors.email    = "Email required";
+    else if (!EMAIL_PATTERN.test(formData.email.trim()) || formData.email.trim().length > 254)
+                            newErrors.email    = "Enter a valid email address";
     if (!formData.phone)    newErrors.phone    = "Phone number required";
     if (!formData.password) newErrors.password = "Password required";
+    else {
+      const message = passwordError(formData.password);
+      if (message)          newErrors.password = message;
+    }
     if (isSeller && !formData.storeName)
                             newErrors.storeName = "Store name required";
     if (formData.password !== formData.confirmPassword)
@@ -338,7 +367,12 @@ const RegisterPage = () => {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.password && <p className="error">{errors.password}</p>}
+              {errors.password
+                ? <p className="error">{errors.password}</p>
+                : <p className="password-hint">
+                    At least {PASSWORD_MIN_LENGTH} characters, with an uppercase and lowercase
+                    letter, a number, and a special character.
+                  </p>}
             </div>
 
             {/* Confirm Password */}
