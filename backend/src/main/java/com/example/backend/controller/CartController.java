@@ -5,6 +5,7 @@ import com.example.backend.dto.UpdateCartQuantityRequest;
 import com.example.backend.model.CartItem;
 import com.example.backend.service.CartService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,27 +32,33 @@ public class CartController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CartItem addItem(@RequestBody CartItemRequest request) {
-        return cartService.addItem(request);
+    public CartItem addItem(@RequestBody CartItemRequest request, Authentication auth) {
+        return cartService.addItem(request, callerId(auth));
     }
 
     @GetMapping("/{userId}")
-    public List<CartItem> getCartItems(@PathVariable String userId) {
-        return cartService.getCartItems(userId);
+    public List<CartItem> getCartItems(@PathVariable String userId, Authentication auth) {
+        return cartService.getCartItems(userId, callerId(auth));
     }
 
     @PutMapping("/{userId}/{productId}")
     public CartItem updateQuantity(
             @PathVariable String userId,
             @PathVariable String productId,
-            @RequestBody UpdateCartQuantityRequest request
+            @RequestBody UpdateCartQuantityRequest request,
+            Authentication auth
     ) {
-        return cartService.updateQuantity(userId, productId, request);
+        return cartService.updateQuantity(userId, productId, request, callerId(auth));
     }
 
     @DeleteMapping("/{userId}/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeItem(@PathVariable String userId, @PathVariable String productId) {
-        cartService.removeItem(userId, productId);
+    public void removeItem(@PathVariable String userId, @PathVariable String productId, Authentication auth) {
+        cartService.removeItem(userId, productId, callerId(auth));
+    }
+
+    /** userId from the JWT subject — the only cart identity the service is allowed to trust. */
+    private static String callerId(Authentication auth) {
+        return auth == null ? null : (String) auth.getPrincipal();
     }
 }

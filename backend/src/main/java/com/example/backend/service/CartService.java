@@ -22,11 +22,17 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
-    public CartItem addItem(CartItemRequest request) {
+    public CartItem addItem(CartItemRequest request, String callerId) {
         validateCartItemRequest(request);
-        ensureUserExists(request.getUserId().trim());
 
-        String userId = request.getUserId().trim();
+        // The body's userId is untrusted. Honour it only as an assertion about the caller;
+        // the item is always written to the authenticated user's cart.
+        if (!isBlank(request.getUserId())) {
+            assertOwner(request.getUserId(), callerId);
+        }
+        String userId = requireCallerId(callerId);
+        ensureUserExists(userId);
+
         String productId = request.getProductId().trim();
         int requestedQty = request.getQty() == null ? 1 : request.getQty();
 
@@ -44,18 +50,23 @@ public class CartService {
         return cartItemRepository.save(cartItem);
     }
 
-    public List<CartItem> getCartItems(String userId) {
+    public List<CartItem> getCartItems(String userId, String callerId) {
         if (isBlank(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id required");
         }
-        ensureUserExists(userId.trim());
-        return cartItemRepository.findByUserId(userId.trim());
+        assertOwner(userId, callerId);
+
+        // Read against the authenticated id, never the path variable.
+        String ownerId = requireCallerId(callerId);
+        ensureUserExists(ownerId);
+        return cartItemRepository.findByUserId(ownerId);
     }
 
-    public CartItem updateQuantity(String userId, String productId, UpdateCartQuantityRequest request) {
+    public CartItem updateQuantity(String userId, String productId, UpdateCartQuantityRequest request, String callerId) {
         if (isBlank(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id required");
         }
+        assertOwner(userId, callerId);
         if (isBlank(productId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product id required");
         }
@@ -63,31 +74,32 @@ public class CartService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be at least 1");
         }
 
-        CartItem cartItem = cartItemRepository.findByUserIdAndProductId(userId.trim(), productId.trim())
+        CartItem cartItem = cartItemRepository
+                .findByUserIdAndProductId(requireCallerId(callerId), productId.trim())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found"));
 
         cartItem.setQty(request.getQty());
         return cartItemRepository.save(cartItem);
     }
 
-    public void removeItem(String userId, String productId) {
+    public void removeItem(String userId, String productId, String callerId) {
         if (isBlank(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id required");
         }
+        assertOwner(userId, callerId);
         if (isBlank(productId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product id required");
         }
 
-        CartItem cartItem = cartItemRepository.findByUserIdAndProductId(userId.trim(), productId.trim())
+        CartItem cartItem = cartItemRepository
+                .findByUserIdAndProductId(requireCallerId(callerId), productId.trim())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found"));
 
         cartItemRepository.delete(cartItem);
     }
 
     private void validateCartItemRequest(CartItemRequest request) {
-        if (isBlank(request.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id required");
-        }
+        // No userId check: the owner comes from the JWT, so the body may omit it entirely.
         if (isBlank(request.getProductId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product id required");
         }
@@ -100,6 +112,24 @@ public class CartService {
         if (request.getQty() != null && request.getQty() < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be at least 1");
         }
+    }
+
+    /**
+     * A cart is private to its owner. The userId travelling in the URL or request body is
+     * attacker-controlled, so it may only ever confirm the caller's own id — it must never
+     * be used to select which cart is read or written.
+     */
+    private void assertOwner(String requestedUserId, String callerId) {
+        if (!requireCallerId(callerId).equals(safeTrim(requestedUserId))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot access another user's cart");
+        }
+    }
+
+    private String requireCallerId(String callerId) {
+        if (isBlank(callerId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
+        }
+        return callerId.trim();
     }
 
     private void ensureUserExists(String userId) {
