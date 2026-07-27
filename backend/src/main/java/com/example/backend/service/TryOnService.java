@@ -29,6 +29,13 @@ import java.util.Map;
 @Service
 public class TryOnService {
 
+    private static final String REPLICATE_API_URL =
+            "https://api.replicate.com/v1/predictions";
+
+    // IDM-VTON — input keys below (human_img, garm_img, garment_des, ...) match this version.
+    private static final String MODEL_VERSION =
+            "c871bb9b046607b680449ecbae55fd8c6d945e0a1948644bf2361b3d021d3ff4";
+
     private String replicateToken;
 
     @Value("${cloudinary.cloud.name}")
